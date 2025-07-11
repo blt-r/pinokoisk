@@ -11,7 +11,7 @@ import MovieCard from './MovieCard';
 import { fetchMovies, filtersAreSame, type Filters, type Movie } from './tmdb';
 import FilterForm from './FilterForm';
 
-function App() {
+const App: React.FC = () => {
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(false);
@@ -95,7 +95,7 @@ function App() {
       </Stack>
     </Container>
   );
-}
+};
 
 export default App;
 

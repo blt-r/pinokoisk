@@ -36,18 +36,18 @@ export type Movie = {
   vote_count: number;
 };
 
-export function genreIdsToNames(ids: number[]): string[] {
+export const genreIdsToNames = (ids: number[]): string[] => {
   return ids
     .filter(id => GENRES.has(id)) // In case they add more ids
     .map(id => GENRES.get(id)!)
     .sort((a, b) => a.localeCompare(b));
-}
+};
 
-export function genreNamesToIds(names: string[]): number[] {
+export const genreNamesToIds = (names: string[]): number[] => {
   return names
     .filter(name => GENRE_IDS[name] !== undefined)
     .map(name => GENRE_IDS[name]);
-}
+};
 
 export type Filters = {
   minYear: number;
@@ -74,10 +74,10 @@ export const MIN_YEAR = 1990;
 export const MIN_RATING = 0;
 export const MAX_RATING = 10;
 
-export async function fetchMovies(
+export const fetchMovies = async (
   page: number,
   filters: Filters
-): Promise<Movie[]> {
+): Promise<Movie[]> => {
   const params = new URLSearchParams();
 
   params.append('page', page.toString());
@@ -116,4 +116,4 @@ export async function fetchMovies(
   const movies = await response.json();
   console.log('movies:', movies);
   return movies.results;
-}
+};
