@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import {
   Alert,
   Box,
@@ -102,7 +102,9 @@ export default App;
 const InfiniteScrollEnd: React.FC<{
   error: boolean;
   noMoreMovies: boolean;
-}> = ({ error, noMoreMovies }) => {
+}> = memo(({ error, noMoreMovies }) => {
+  console.log('InfiniteScrollEnd rendered', { error, noMoreMovies });
+
   if (error) {
     return (
       <Alert severity="error">
@@ -114,8 +116,8 @@ const InfiniteScrollEnd: React.FC<{
   } else {
     return (
       <Grid justifyContent="center" container>
-        <CircularProgress />
+        <CircularProgress disableShrink />
       </Grid>
     );
   }
-};
+});
