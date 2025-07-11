@@ -58,7 +58,7 @@ function App() {
 
       if (!loading) observer.current.observe(node);
     },
-    [loading, page, filters]
+    [loading, page, filters, noMoreMovies]
   );
 
   const handleFilterChange = useCallback(
@@ -74,7 +74,7 @@ function App() {
       setNoMoreMovies(false);
       loadMoreMovies(1, newFilters);
     },
-    [filters, loadMoreMovies]
+    [filters]
   );
 
   return (
