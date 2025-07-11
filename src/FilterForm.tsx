@@ -21,6 +21,22 @@ import {
   type Filters,
 } from './tmdb';
 
+const formatYearRange = ([min, max]: [number, number]): string => {
+  if (min === MIN_YEAR && max === CURRENT_YEAR) return 'any';
+  if (min === MIN_YEAR) return `before ${max}`;
+  if (max === CURRENT_YEAR) return `after ${min}`;
+  if (min === max) return min.toString();
+  return `${min} — ${max}`; // this is an em dash, not a hyphen
+};
+
+const formatRatingRange = ([min, max]: [number, number]): string => {
+  if (min === MIN_RATING && max === MAX_RATING) return 'any';
+  if (min === MIN_RATING) return `below ${max}`;
+  if (max === MAX_RATING) return `above ${min}`;
+  if (min === max) return `exactly ${min}`;
+  return `${min} — ${max}`; // this is also an em dash
+};
+
 type Props = {
   onFilterChange: (filters: Filters) => void;
 };
@@ -108,7 +124,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
 
       <Stack component="form" onSubmit={handleSubmit} spacing={2} mx={2}>
         <Box>
-          <label>Year Range</label>
+          <label>Year: {formatYearRange(yearRange)}</label>
           <Slider
             value={yearRange}
             onChange={(_, v) => setYearRange(v as [number, number])}
@@ -119,13 +135,14 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
         </Box>
 
         <Box>
-          <label>Rating Range</label>
+          <label>Rating: {formatRatingRange(ratingRange)}</label>
           <Slider
             value={ratingRange}
             onChange={(_, v) => setRatingRange(v as [number, number])}
             valueLabelDisplay="auto"
             min={0}
             max={10}
+            step={0.1}
           />
         </Box>
 
