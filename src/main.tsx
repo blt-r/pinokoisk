@@ -7,6 +7,7 @@ import MoviesPage from '@/pages/MoviesPage.tsx';
 import RootLayout from '@/components/RootLayout.tsx';
 import FavoritesPage from '@/pages/FavoritesPage.tsx';
 import NotFoundPage from '@/pages/NotFoundPage';
+import MovieDetailsPage from '@/pages/MovieDetailsPage';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: 'favorites',
         element: <FavoritesPage />,
+      },
+      {
+        path: 'movie/:id',
+        element: <MovieDetailsPage />,
       },
       {
         path: '*',

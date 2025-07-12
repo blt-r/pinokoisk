@@ -9,11 +9,15 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 const RootLayout: React.FC = () => {
   const location = useLocation();
 
+  const tab = ['/', '/favorites'].includes(location.pathname)
+    ? location.pathname
+    : false;
+
   return (
     <>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component="nav">
         <Container>
-          <Tabs value={location.pathname}>
+          <Tabs value={tab}>
             <Tab
               component={Link}
               to="/"

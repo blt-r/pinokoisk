@@ -125,10 +125,18 @@ export type MovieDetails = Movie & {
   budget: number;
   homepage: string;
   original_language: string;
-  poster_path: string;
   revenue: number;
   runtime: number;
   imdb_id: string;
+  production_companies: {
+    id: number;
+    name: string;
+    origin_country: string;
+    logo_path: string;
+  }[];
+  production_countries: { iso_3166_1: string; name: string }[];
+  spoken_languages: { english_name: string; iso_639_1: string; name: string }[];
+  tagline: string;
 };
 
 export const fetchMovieDetails = async (id: number): Promise<MovieDetails> => {
