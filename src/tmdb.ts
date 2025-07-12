@@ -107,6 +107,10 @@ export const fetchMovies = async (
     },
   });
 
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movies: ${response.statusText}`);
+  }
+
   type ResponseMovies = Omit<Movie, 'genres'> & { genre_ids: number[] };
 
   const json: { results: ResponseMovies[] } = await response.json();
@@ -135,6 +139,10 @@ export const fetchMovieDetails = async (id: number): Promise<MovieDetails> => {
       'Authorization': 'Bearer ' + import.meta.env.VITE_TMDB_API_KEY,
     },
   });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movie details: ${response.statusText}`);
+  }
 
   return await response.json();
 };
