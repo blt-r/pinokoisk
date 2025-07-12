@@ -11,9 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import {
   CURRENT_YEAR,
-  genreIdsToNames,
-  genreNamesToIds,
-  GENRES,
+  GENRE_IDS,
   MAX_RATING,
   MIN_RATING,
   MIN_YEAR,
@@ -51,8 +49,10 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
     Number(searchParams.get('rating_min')) || MIN_RATING,
     Number(searchParams.get('rating_max')) || MAX_RATING,
   ]);
-  const [selectedGenres, setSelectedGenres] = useState<number[]>(
-    genreNamesToIds(searchParams.get('genres')?.split(',') || [])
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    (searchParams.get('genres')?.split(',') || []).filter(
+      g => GENRE_IDS[g] !== undefined
+    )
   );
 
   const buildParams = () => {
@@ -70,8 +70,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
       if (maxRating < 10) params.rating_max = maxRating.toString();
     }
 
-    const validGenres = genreIdsToNames(selectedGenres);
-    if (validGenres.length) params.genres = validGenres.join(',');
+    if (selectedGenres.length) params.genres = selectedGenres.join(',');
 
     return params;
   };
@@ -84,7 +83,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
       maxYear: yearRange[1],
       minRating: ratingRange[0],
       maxRating: ratingRange[1],
-      genres: selectedGenres,
+      genres: selectedGenres.map(g => GENRE_IDS[g]),
     });
   }, []);
 
@@ -97,7 +96,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
       maxYear: yearRange[1],
       minRating: ratingRange[0],
       maxRating: ratingRange[1],
-      genres: selectedGenres,
+      genres: selectedGenres.map(g => GENRE_IDS[g]),
     });
   };
 
@@ -148,13 +147,12 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
         <Box>
           <Autocomplete
             multiple
-            options={Array.from(GENRES.keys())}
+            options={Object.keys(GENRE_IDS)}
             value={selectedGenres}
             onChange={(_, v) => setSelectedGenres(v)}
             renderInput={params => (
               <TextField {...params} label="Genres" variant="standard" />
             )}
-            getOptionLabel={id => GENRES.get(id) || ''}
           />
         </Box>
 

@@ -20,10 +20,6 @@ export const GENRE_IDS: Record<string, number> = {
   Western: 37,
 };
 
-export const GENRES = new Map<number, string>(
-  Object.entries(GENRE_IDS).map(([name, id]) => [id, name])
-);
-
 export type Filters = {
   minYear: number;
   maxYear: number;
@@ -43,31 +39,29 @@ export const filtersAreSame = (a: Filters, b: Filters): boolean => {
   );
 };
 
+type Genre = { id: number; name: string };
+
 export type Movie = {
   title: string;
   original_title: string;
   poster_path: string;
   id: number;
   release_date: string;
-  genres: { id: number; name: string }[];
+  genres: Genre[];
   overview: string;
   vote_average: number;
   vote_count: number;
 };
 
-const genresFromIds = (ids: number[]): { id: number; name: string }[] => {
+const GENRES = new Map<number, string>(
+  Object.entries(GENRE_IDS).map(([name, id]) => [id, name])
+);
+
+const genresFromIds = (ids: number[]): Genre[] => {
   return ids
-    .filter(id => GENRES.has(id)) // In case they add more ids
-    .map(id => ({ id, name: GENRES.get(id)! }))
+    .map(id => ({ id, name: GENRES.get(id) }))
+    .filter((g): g is Genre => g.name !== undefined) // They might add more genre ids we don't know about
     .sort((a, b) => a.name.localeCompare(b.name));
-};
-
-export const genreNamesToIds = (names: string[]): number[] => {
-  return names.map(name => GENRE_IDS[name]).filter(id => id !== undefined);
-};
-
-export const genreIdsToNames = (ids: number[]): string[] => {
-  return ids.map(id => GENRES.get(id)).filter(name => name !== undefined);
 };
 
 export const CURRENT_YEAR = new Date().getFullYear();
