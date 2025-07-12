@@ -85,6 +85,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
       maxRating: ratingRange[1],
       genres: selectedGenres.map(g => GENRE_IDS[g]),
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
