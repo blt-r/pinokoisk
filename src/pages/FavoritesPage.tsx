@@ -1,5 +1,7 @@
 import Stack from '@mui/material/Stack';
 import { observer } from 'mobx-react-lite';
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
 import {
@@ -9,7 +11,6 @@ import {
 import { fetchMovieDetails, type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
-import Alert from '@mui/material/Alert';
 import Spinner from '@/components/Spinner';
 
 const FavoritesPage: React.FC = observer(() => {
@@ -57,6 +58,12 @@ const FavoritesPage: React.FC = observer(() => {
 
   return (
     <Stack gap={2} my={2}>
+      {favoriteStore.set.size === 0 && (
+        <Typography align="center" py={6}>
+          Add movies to favorites and they will appear here
+        </Typography>
+      )}
+
       {fetchedMovies.map((movie, i) => (
         <MovieCard key={i} movie={movie} />
       ))}

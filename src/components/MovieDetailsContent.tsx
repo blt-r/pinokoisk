@@ -29,7 +29,10 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
 
   return (
     <Box my={2}>
-      <Stack direction={{ xs: 'column', sm: 'row' }} position="relative">
+      <Stack
+        sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}
+        position="relative"
+      >
         <Box sx={{ position: 'absolute', top: 3, right: 3 }}>
           <FavoriteButton id={details.id} />
         </Box>
@@ -45,11 +48,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             display: 'block',
           }}
         />
-        <Box
-          sx={{
-            p: { xs: 0, sm: 2 },
-          }}
-        >
+        <Box>
           <Typography variant="h1" fontSize="3em">
             {details.title}
           </Typography>

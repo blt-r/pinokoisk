@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import MoviesPage from '@/pages/MoviesPage.tsx';
-import RootLayout from '@/components/RootLayout.tsx';
+import RootLayout from '@/pages/RootLayout';
 import FavoritesPage from '@/pages/FavoritesPage.tsx';
 import NotFoundPage from '@/pages/NotFoundPage';
 import MovieDetailsPage from '@/pages/MovieDetailsPage';

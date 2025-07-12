@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 
 const Spinner: React.FC = () => {
   return (
-    <Grid sx={{ placeContent: 'center', padding: 10 }} container>
+    <Grid sx={{ placeContent: 'center', py: 10 }} container>
       <CircularProgress disableShrink />
     </Grid>
   );
