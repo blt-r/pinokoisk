@@ -1,14 +1,20 @@
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
+  Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  IconButton,
+  Paper,
   Stack,
   Typography,
 } from '@mui/material';
 import { genreIdsToNames, type Movie } from './tmdb';
-import { Star } from '@mui/icons-material';
+import { Favorite, FavoriteBorder, Star } from '@mui/icons-material';
+import { observer } from 'mobx-react-lite';
+import { favoriteStore } from './favoriteStore';
+import { useState } from 'react';
 
 type Props = {
   movie: Movie;
@@ -16,16 +22,35 @@ type Props = {
 
 const MovieCard: React.FC<Props> = ({ movie }) => {
   return (
-    <Card sx={{ display: 'flex', maxHeight: 250, overflow: 'hidden' }}>
-      <CardMedia
+    <Paper
+      sx={{
+        display: 'flex',
+        height: { xs: 180, sm: 250 },
+        overflow: 'hidden',
+      }}
+    >
+      <Box
         component="img"
-        image={'https://image.tmdb.org/t/p/w500/' + movie.poster_path}
+        src={'https://image.tmdb.org/t/p/w500/' + movie.poster_path}
         alt={movie.title + ' poster'}
-        sx={{ height: 250, aspectRatio: '500 / 720', width: 'auto' }}
+        sx={{ height: '100%', aspectRatio: '500 / 720', width: 'auto' }}
       />
-      <CardContent>
+      <Box
+        sx={{
+          fontSize: { xs: '0.7rem', sm: '1rem' },
+          padding: { xs: 1.5, sm: 2 },
+          flexGrow: 1,
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: { xs: 0.5, sm: 1 },
+        }}
+      >
         <Box>
-          <Typography variant="h2" sx={{ fontSize: '2em', display: 'inline' }}>
+          <Typography
+            variant="h2"
+            sx={{ fontSize: '1.7em', display: 'inline' }}
+          >
             {movie.title}
           </Typography>
           {movie.original_title === movie.title ? null : (
@@ -38,29 +63,35 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center' }}>
-          <Typography variant="subtitle1">
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1.2,
+            alignItems: 'center',
+          }}
+        >
+          <Typography sx={{ fontSize: '1.1em' }}>
             {movie.release_date.split('-')[0]}
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
-            <Star sx={{ fontSize: '.9em' }} />
+            <Star sx={{ fontSize: '1em' }} />
 
-            <Typography variant="subtitle1">
+            <Typography sx={{ fontSize: '1.1em' }}>
               {movie.vote_average.toFixed(1)}
             </Typography>
           </Box>
 
-          <Typography variant="subtitle1">
+          <Typography sx={{ fontSize: '1.1em' }}>
             ({movie.vote_count.toLocaleString()})
           </Typography>
         </Box>
 
         <Typography
           sx={{
+            display: { xs: 'none', sm: ['block', '-webkit-box'] },
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            display: '-webkit-box',
             WebkitLineClamp: 3,
             WebkitBoxOrient: 'vertical',
           }}
@@ -68,14 +99,83 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
           {movie.overview}
         </Typography>
 
-        <Stack direction="row" spacing={1} flexWrap="wrap" mt={2}>
+        <Stack
+          sx={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 0.5,
+            mt: { sm: 'auto' },
+            pr: { sm: 4 },
+          }}
+        >
           {genreIdsToNames(movie.genre_ids).map((genre, i) => (
-            <Chip key={i} label={genre} />
+            <Chip key={i} label={genre} size="small" />
           ))}
         </Stack>
-      </CardContent>
-    </Card>
+
+        <Box sx={{ position: 'absolute', bottom: '8px', right: '8px' }}>
+          <FavoriteButton id={movie.id} />
+        </Box>
+      </Box>
+    </Paper>
   );
 };
+
+const FavoriteButton: React.FC<{ id: number }> = observer(({ id }) => {
+  const isFavorite = favoriteStore.isFavorite(id);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [lastDialogForRemoving, setLastDialogForRemoving] = useState(false);
+
+  const handleClose = (confirmed: boolean) => {
+    setDialogOpen(false);
+
+    if (!confirmed) {
+      return;
+    }
+
+    if (isFavorite) {
+      favoriteStore.remove(id);
+    } else {
+      favoriteStore.add(id);
+    }
+  };
+
+  return (
+    <>
+      <IconButton
+        aria-label="favorite"
+        onClick={() => {
+          setLastDialogForRemoving(isFavorite);
+          setDialogOpen(true);
+        }}
+        sx={{
+          color: isFavorite ? '#d654b3' : null,
+          transition: 'color .3s ease',
+        }}
+      >
+        {isFavorite ? <Favorite /> : <FavoriteBorder />}
+      </IconButton>
+
+      <Dialog open={dialogOpen} onClose={() => handleClose(false)}>
+        <DialogTitle>
+          {lastDialogForRemoving
+            ? 'Remove from Favorites?'
+            : 'Add to Favorites?'}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => handleClose(false)}>Cancel</Button>
+          <Button
+            onClick={() => handleClose(true)}
+            autoFocus
+            variant="contained"
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+});
 
 export default MovieCard;
