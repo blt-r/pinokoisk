@@ -1,13 +1,12 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { memo, useCallback, useRef, useState } from 'react';
 
 import MovieCard from '@/components/MovieCard';
 import { fetchMovies, filtersAreSame, type Filters, type Movie } from '@/tmdb';
 import FilterForm from '@/components/FilterForm';
+import Spinner from '@/components/Spinner';
 
 const MoviesPage: React.FC = () => {
   const [movieList, setMovieList] = useState<Movie[]>([]);
@@ -113,10 +112,6 @@ const InfiniteScrollEnd: React.FC<{
   } else if (noMoreMovies) {
     return <Alert severity="info">No more movies match the filters.</Alert>;
   } else {
-    return (
-      <Grid justifyContent="center" container>
-        <CircularProgress disableShrink />
-      </Grid>
-    );
+    return <Spinner />;
   }
 });

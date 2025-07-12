@@ -1,6 +1,4 @@
 import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
-import Grid from '@mui/material/Grid';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 
@@ -12,6 +10,7 @@ import { fetchMovieDetails, type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
 import Alert from '@mui/material/Alert';
+import Spinner from '@/components/Spinner';
 
 const FavoritesPage: React.FC = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -68,11 +67,7 @@ const FavoritesPage: React.FC = observer(() => {
         </Alert>
       )}
 
-      {loading && (
-        <Grid justifyContent="center" container>
-          <CircularProgress disableShrink />
-        </Grid>
-      )}
+      {loading && <Spinner />}
     </Stack>
   );
 });
