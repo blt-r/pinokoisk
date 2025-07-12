@@ -1,21 +1,13 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Favorite from '@mui/icons-material/Favorite';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Star from '@mui/icons-material/Star';
-import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { type Movie } from '@/tmdb';
-import { favoriteStore } from '@/stores/favoriteStore';
+import FavoriteButton from '@/components/FavoriteButton';
 
 type Props = {
   movie: Movie;
@@ -24,7 +16,10 @@ type Props = {
 const MovieCard: React.FC<Props> = ({ movie }) => {
   return (
     <Paper
+      component={Link}
+      to={'/movie/' + movie.id}
       sx={{
+        textDecoration: 'none',
         display: 'flex',
         height: { xs: 180, sm: 250 },
         overflow: 'hidden',
@@ -32,9 +27,9 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
     >
       <Box
         component="img"
-        src={'https://image.tmdb.org/t/p/w500/' + movie.poster_path}
+        src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
         alt={movie.title + ' poster'}
-        sx={{ height: '100%', aspectRatio: '500 / 720', width: 'auto' }}
+        sx={{ height: '100%', aspectRatio: '500 / 720' }}
       />
       <Box
         sx={{
@@ -75,17 +70,17 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
             {movie.release_date.split('-')[0]}
           </Typography>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Star sx={{ fontSize: '1em' }} />
 
-            <Typography sx={{ fontSize: '1.1em' }}>
+            <Typography sx={{ fontSize: '1.1em', ml: 0.2 }}>
               {movie.vote_average.toFixed(1)}
             </Typography>
-          </Box>
 
-          <Typography sx={{ fontSize: '1.1em' }}>
-            ({movie.vote_count.toLocaleString()})
-          </Typography>
+            <Typography sx={{ fontSize: '1.1em', ml: 1.2 }}>
+              ({movie.vote_count.toLocaleString()})
+            </Typography>
+          </Box>
         </Box>
 
         <Typography
@@ -121,62 +116,5 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
     </Paper>
   );
 };
-
-const FavoriteButton: React.FC<{ id: number }> = observer(({ id }) => {
-  const isFavorite = favoriteStore.isFavorite(id);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [lastDialogForRemoving, setLastDialogForRemoving] = useState(false);
-
-  const handleClose = (confirmed: boolean) => {
-    setDialogOpen(false);
-
-    if (!confirmed) {
-      return;
-    }
-
-    if (isFavorite) {
-      favoriteStore.remove(id);
-    } else {
-      favoriteStore.add(id);
-    }
-  };
-
-  return (
-    <>
-      <IconButton
-        aria-label="favorite"
-        onClick={() => {
-          setLastDialogForRemoving(isFavorite);
-          setDialogOpen(true);
-        }}
-        sx={{
-          color: isFavorite ? '#d654b3' : null,
-          transition: 'color .3s ease',
-        }}
-      >
-        {isFavorite ? <Favorite /> : <FavoriteBorder />}
-      </IconButton>
-
-      <Dialog open={dialogOpen} onClose={() => handleClose(false)}>
-        <DialogTitle>
-          {lastDialogForRemoving
-            ? 'Remove from Favorites?'
-            : 'Add to Favorites?'}
-        </DialogTitle>
-        <DialogActions>
-          <Button onClick={() => handleClose(false)}>Cancel</Button>
-          <Button
-            onClick={() => handleClose(true)}
-            autoFocus
-            variant="contained"
-          >
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-});
 
 export default MovieCard;
