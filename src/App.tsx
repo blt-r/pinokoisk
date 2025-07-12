@@ -1,12 +1,11 @@
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 import { memo, useCallback, useRef, useState } from 'react';
-import {
-  Alert,
-  Box,
-  CircularProgress,
-  Container,
-  Grid,
-  Stack,
-} from '@mui/material';
+
 import MovieCard from './MovieCard';
 import { fetchMovies, filtersAreSame, type Filters, type Movie } from './tmdb';
 import FilterForm from './FilterForm';

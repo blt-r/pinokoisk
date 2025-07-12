@@ -1,20 +1,21 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-} from '@mui/material';
-import { genreIdsToNames, type Movie } from './tmdb';
-import { Favorite, FavoriteBorder, Star } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import Favorite from '@mui/icons-material/Favorite';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Star from '@mui/icons-material/Star';
 import { observer } from 'mobx-react-lite';
-import { favoriteStore } from './favoriteStore';
 import { useState } from 'react';
+
+import { genreIdsToNames, type Movie } from './tmdb';
+import { favoriteStore } from './favoriteStore';
 
 type Props = {
   movie: Movie;

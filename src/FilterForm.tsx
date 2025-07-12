@@ -1,15 +1,14 @@
+import Slider from '@mui/material/Slider';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
 import { useState, useEffect, type FormEvent } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  Slider,
-  Autocomplete,
-  TextField,
-  Box,
-  Paper,
-  Button,
-  Typography,
-  Stack,
-} from '@mui/material';
+
 import {
   CURRENT_YEAR,
   genreIdsToNames,
