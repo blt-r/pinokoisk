@@ -14,8 +14,8 @@ import Star from '@mui/icons-material/Star';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 
-import { type Movie } from '../tmdb';
-import { favoriteStore } from '../stores/favoriteStore';
+import { type Movie } from '@/tmdb';
+import { favoriteStore } from '@/stores/favoriteStore';
 
 type Props = {
   movie: Movie;

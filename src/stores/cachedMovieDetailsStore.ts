@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { type MovieDetails } from '../tmdb';
+import { type MovieDetails } from '@/tmdb';
 
 class CackedMovieDetailsStore {
   private detailsCache: Map<number, MovieDetails> = new Map();

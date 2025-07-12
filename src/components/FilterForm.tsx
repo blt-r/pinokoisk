@@ -16,7 +16,7 @@ import {
   MIN_RATING,
   MIN_YEAR,
   type Filters,
-} from '../tmdb';
+} from '@/tmdb';
 
 const formatYearRange = ([min, max]: [number, number]): string => {
   if (min === MIN_YEAR && max === CURRENT_YEAR) return 'any';
