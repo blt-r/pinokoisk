@@ -24,31 +24,6 @@ export const GENRES = new Map<number, string>(
   Object.entries(GENRE_IDS).map(([name, id]) => [id, name])
 );
 
-export type Movie = {
-  title: string;
-  original_title: string;
-  poster_path: string;
-  id: number;
-  release_date: string;
-  genre_ids: number[];
-  overview: string;
-  vote_average: number;
-  vote_count: number;
-};
-
-export const genreIdsToNames = (ids: number[]): string[] => {
-  return ids
-    .filter(id => GENRES.has(id)) // In case they add more ids
-    .map(id => GENRES.get(id)!)
-    .sort((a, b) => a.localeCompare(b));
-};
-
-export const genreNamesToIds = (names: string[]): number[] => {
-  return names
-    .filter(name => GENRE_IDS[name] !== undefined)
-    .map(name => GENRE_IDS[name]);
-};
-
 export type Filters = {
   minYear: number;
   maxYear: number;
@@ -66,6 +41,33 @@ export const filtersAreSame = (a: Filters, b: Filters): boolean => {
     a.genres.length === b.genres.length &&
     a.genres.every((genre, index) => genre === b.genres[index])
   );
+};
+
+export type Movie = {
+  title: string;
+  original_title: string;
+  poster_path: string;
+  id: number;
+  release_date: string;
+  genres: { id: number; name: string }[];
+  overview: string;
+  vote_average: number;
+  vote_count: number;
+};
+
+const genresFromIds = (ids: number[]): { id: number; name: string }[] => {
+  return ids
+    .filter(id => GENRES.has(id)) // In case they add more ids
+    .map(id => ({ id, name: GENRES.get(id)! }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+export const genreNamesToIds = (names: string[]): number[] => {
+  return names.map(name => GENRE_IDS[name]).filter(id => id !== undefined);
+};
+
+export const genreIdsToNames = (ids: number[]): string[] => {
+  return ids.map(id => GENRES.get(id)).filter(name => name !== undefined);
 };
 
 export const CURRENT_YEAR = new Date().getFullYear();
@@ -104,8 +106,6 @@ export const fetchMovies = async (
 
   const url = 'https://api.themoviedb.org/3/discover/movie?' + params;
 
-  console.log('Fetching movies from:', url);
-
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
@@ -113,7 +113,34 @@ export const fetchMovies = async (
     },
   });
 
-  const movies = await response.json();
-  console.log('movies:', movies);
-  return movies.results;
+  type ResponseMovies = Omit<Movie, 'genres'> & { genre_ids: number[] };
+
+  const json: { results: ResponseMovies[] } = await response.json();
+
+  return json.results.map(movie => ({
+    ...movie,
+    genres: genresFromIds(movie.genre_ids),
+  }));
+};
+
+export type MovieDetails = Movie & {
+  budget: number;
+  homepage: string;
+  original_language: string;
+  poster_path: string;
+  revenue: number;
+  runtime: number;
+  imdb_id: string;
+};
+
+export const fetchMovieDetails = async (id: number): Promise<MovieDetails> => {
+  const url = `https://api.themoviedb.org/3/movie/${id}`;
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + import.meta.env.VITE_TMDB_API_KEY,
+    },
+  });
+
+  return await response.json();
 };

@@ -3,7 +3,7 @@ import { makeAutoObservable, reaction } from 'mobx';
 const LOCALSTORAGE_KEY = 'pinokoisk.favorites';
 
 class FavoriteStore {
-  favorites: Set<number>;
+  private favorites: Set<number>;
 
   constructor() {
     makeAutoObservable(this);
@@ -20,6 +20,10 @@ class FavoriteStore {
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(favorites));
       }
     );
+  }
+
+  get set(): ReadonlySet<number> {
+    return this.favorites;
   }
 
   add(movie_id: number) {

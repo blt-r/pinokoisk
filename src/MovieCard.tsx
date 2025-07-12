@@ -14,7 +14,7 @@ import Star from '@mui/icons-material/Star';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 
-import { genreIdsToNames, type Movie } from './tmdb';
+import { type Movie } from './tmdb';
 import { favoriteStore } from './favoriteStore';
 
 type Props = {
@@ -109,8 +109,8 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
             pr: { sm: 4 },
           }}
         >
-          {genreIdsToNames(movie.genre_ids).map((genre, i) => (
-            <Chip key={i} label={genre} size="small" />
+          {movie.genres.map((genre, i) => (
+            <Chip key={i} label={genre.name} size="small" />
           ))}
         </Stack>
 

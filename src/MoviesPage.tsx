@@ -1,7 +1,6 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { memo, useCallback, useRef, useState } from 'react';
@@ -10,7 +9,7 @@ import MovieCard from './MovieCard';
 import { fetchMovies, filtersAreSame, type Filters, type Movie } from './tmdb';
 import FilterForm from './FilterForm';
 
-const App: React.FC = () => {
+const MoviesPage: React.FC = () => {
   const [movieList, setMovieList] = useState<Movie[]>([]);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(false);
@@ -77,33 +76,29 @@ const App: React.FC = () => {
   );
 
   return (
-    <Container>
-      <Stack spacing={2} my={2}>
-        <FilterForm onFilterChange={handleFilterChange} />
+    <Stack spacing={2} my={2}>
+      <FilterForm onFilterChange={handleFilterChange} />
 
-        {movieList.map((movie, i) => (
-          <Box
-            ref={i === movieList.length - 1 ? lastPostElementRef : null}
-            key={i}
-          >
-            <MovieCard movie={movie} />
-          </Box>
-        ))}
+      {movieList.map((movie, i) => (
+        <Box
+          ref={i === movieList.length - 1 ? lastPostElementRef : null}
+          key={i}
+        >
+          <MovieCard movie={movie} />
+        </Box>
+      ))}
 
-        <InfiniteScrollEnd error={error} noMoreMovies={noMoreMovies} />
-      </Stack>
-    </Container>
+      <InfiniteScrollEnd error={error} noMoreMovies={noMoreMovies} />
+    </Stack>
   );
 };
 
-export default App;
+export default MoviesPage;
 
 const InfiniteScrollEnd: React.FC<{
   error: boolean;
   noMoreMovies: boolean;
 }> = memo(({ error, noMoreMovies }) => {
-  console.log('InfiniteScrollEnd rendered', { error, noMoreMovies });
-
   if (error) {
     return (
       <Alert severity="error">

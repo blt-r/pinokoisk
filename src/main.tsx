@@ -3,12 +3,24 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import App from './App.tsx';
+import MoviesPage from './MoviesPage.tsx';
+import RootLayout from './RootLayout.tsx';
+import FavoritesPage from './FavoritesPage.tsx';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <MoviesPage />,
+      },
+      {
+        path: 'favorites',
+        element: <FavoritesPage />,
+      },
+    ],
   },
 ]);
 
