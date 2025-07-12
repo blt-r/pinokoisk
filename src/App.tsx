@@ -79,7 +79,7 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <Stack spacing={3} mt={3} mb={3}>
+      <Stack spacing={2} my={2}>
         <FilterForm onFilterChange={handleFilterChange} />
 
         {movieList.map((movie, i) => (
