@@ -109,7 +109,13 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
           ))}
         </Stack>
 
-        <Box sx={{ position: 'absolute', bottom: '8px', right: '8px' }}>
+        <Box
+          sx={{ position: 'absolute', bottom: '8px', right: '8px' }}
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
           <FavoriteButton id={movie.id} />
         </Box>
       </Box>
