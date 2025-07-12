@@ -5,9 +5,9 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import { memo, useCallback, useRef, useState } from 'react';
 
-import MovieCard from './MovieCard';
-import { fetchMovies, filtersAreSame, type Filters, type Movie } from './tmdb';
-import FilterForm from './FilterForm';
+import MovieCard from '../components/MovieCard';
+import { fetchMovies, filtersAreSame, type Filters, type Movie } from '../tmdb';
+import FilterForm from '../components/FilterForm';
 
 const MoviesPage: React.FC = () => {
   const [movieList, setMovieList] = useState<Movie[]>([]);

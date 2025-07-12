@@ -3,9 +3,9 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import MoviesPage from './MoviesPage.tsx';
-import RootLayout from './RootLayout.tsx';
-import FavoritesPage from './FavoritesPage.tsx';
+import MoviesPage from './pages/MoviesPage.tsx';
+import RootLayout from './components/RootLayout.tsx';
+import FavoritesPage from './pages/FavoritesPage.tsx';
 
 const router = createBrowserRouter([
   {

@@ -4,10 +4,10 @@ import Grid from '@mui/material/Grid';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 
-import { cachedMovieDetailsStore } from './cachedMovieDetailsStore';
-import { fetchMovieDetails, type Movie } from './tmdb';
-import MovieCard from './MovieCard';
-import { favoriteStore } from './favoriteStore';
+import { cachedMovieDetailsStore } from '../stores/cachedMovieDetailsStore';
+import { fetchMovieDetails, type Movie } from '../tmdb';
+import MovieCard from '../components/MovieCard';
+import { favoriteStore } from '../stores/favoriteStore';
 
 const FavoritesPage: React.FC = observer(() => {
   const [loading, setLoading] = useState(true);
