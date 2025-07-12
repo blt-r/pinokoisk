@@ -47,7 +47,12 @@ const MoviesPage: React.FC = () => {
 
       observer.current = new IntersectionObserver(
         entries => {
-          if (entries[0].isIntersecting && !loading && !noMoreMovies) {
+          if (
+            entries[0].isIntersecting &&
+            !loading &&
+            !noMoreMovies &&
+            !error
+          ) {
             loadMoreMovies(page, filters!);
           }
         },
@@ -56,7 +61,7 @@ const MoviesPage: React.FC = () => {
 
       if (!loading) observer.current.observe(node);
     },
-    [loading, page, filters, noMoreMovies]
+    [loading, page, filters, noMoreMovies, error]
   );
 
   const handleFilterChange = useCallback(
