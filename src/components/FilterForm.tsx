@@ -123,8 +123,11 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
 
       <Stack component="form" onSubmit={handleSubmit} spacing={2} mx={2}>
         <Box>
-          <label>Year: {formatYearRange(yearRange)}</label>
+          <Typography id="year-slider-label">
+            Year: {formatYearRange(yearRange)}
+          </Typography>
           <Slider
+            aria-labelledby="year-slider-label"
             value={yearRange}
             onChange={(_, v) => setYearRange(v as [number, number])}
             valueLabelDisplay="auto"
@@ -134,8 +137,11 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
         </Box>
 
         <Box>
-          <label>Rating: {formatRatingRange(ratingRange)}</label>
+          <Typography id="rating-slider-label">
+            Rating: {formatRatingRange(ratingRange)}
+          </Typography>
           <Slider
+            aria-labelledby="rating-slider-label"
             value={ratingRange}
             onChange={(_, v) => setRatingRange(v as [number, number])}
             valueLabelDisplay="auto"
