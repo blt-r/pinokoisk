@@ -53,7 +53,7 @@ export type Movie = {
   vote_count: number;
 };
 
-const GENRES = new Map<number, string>(
+export const GENRES = new Map<number, string>(
   Object.entries(GENRE_IDS).map(([name, id]) => [id, name])
 );
 
@@ -69,6 +69,14 @@ export const MIN_YEAR = 1990;
 
 export const MIN_RATING = 0;
 export const MAX_RATING = 10;
+
+export const defaultFilters = (): Filters => ({
+  minYear: MIN_YEAR,
+  maxYear: CURRENT_YEAR,
+  minRating: MIN_RATING,
+  maxRating: MAX_RATING,
+  genres: [],
+});
 
 export const fetchMovies = async (
   page: number,

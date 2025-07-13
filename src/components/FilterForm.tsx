@@ -6,17 +6,20 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import { useState, useEffect, type FormEvent } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import {
   CURRENT_YEAR,
+  defaultFilters,
   GENRE_IDS,
+  GENRES,
   MAX_RATING,
   MIN_RATING,
   MIN_YEAR,
-  type Filters,
 } from '@/tmdb';
+import { observer } from 'mobx-react-lite';
+import { moviesPageStore } from '@/stores/moviesPageStore';
+import { reaction } from 'mobx';
 
 const formatYearRange = ([min, max]: [number, number]): string => {
   if (min === MIN_YEAR && max === CURRENT_YEAR) return 'any';
@@ -34,65 +37,35 @@ const formatRatingRange = ([min, max]: [number, number]): string => {
   return `${min} — ${max}`; // this is also an em dash
 };
 
-type Props = {
-  onFilterChange: (filters: Filters) => void;
-};
-
-const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
+const FilterForm: React.FC = observer(() => {
   const [yearRange, setYearRange] = useState<[number, number]>([
-    Number(searchParams.get('year_min')) || MIN_YEAR,
-    Number(searchParams.get('year_max')) || CURRENT_YEAR,
+    moviesPageStore.filters.minYear,
+    moviesPageStore.filters.maxYear,
   ]);
+
   const [ratingRange, setRatingRange] = useState<[number, number]>([
-    Number(searchParams.get('rating_min')) || MIN_RATING,
-    Number(searchParams.get('rating_max')) || MAX_RATING,
+    moviesPageStore.filters.minRating,
+    moviesPageStore.filters.maxRating,
   ]);
+
   const [selectedGenres, setSelectedGenres] = useState<string[]>(
-    (searchParams.get('genres')?.split(',') || []).filter(
-      g => GENRE_IDS[g] !== undefined
-    )
+    moviesPageStore.filters.genres.map(id => GENRES.get(id)!)
   );
 
-  const buildParams = () => {
-    const params: Record<string, string> = {};
-
-    const [minYear, maxYear] = yearRange;
-    if (minYear <= maxYear) {
-      if (minYear > 1990) params.year_min = minYear.toString();
-      if (maxYear < CURRENT_YEAR) params.year_max = maxYear.toString();
-    }
-
-    const [minRating, maxRating] = ratingRange;
-    if (minRating <= maxRating) {
-      if (minRating > 0) params.rating_min = minRating.toString();
-      if (maxRating < 10) params.rating_max = maxRating.toString();
-    }
-
-    if (selectedGenres.length) params.genres = selectedGenres.join(',');
-
-    return params;
-  };
-
   useEffect(() => {
-    const params = buildParams();
-    setSearchParams(params, { replace: true });
-    onFilterChange({
-      minYear: yearRange[0],
-      maxYear: yearRange[1],
-      minRating: ratingRange[0],
-      maxRating: ratingRange[1],
-      genres: selectedGenres.map(g => GENRE_IDS[g]),
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return reaction(
+      () => moviesPageStore.filters,
+      filters => {
+        setYearRange([filters.minYear, filters.maxYear]);
+        setRatingRange([filters.minRating, filters.maxRating]);
+        setSelectedGenres(filters.genres.map(id => GENRES.get(id)!));
+      }
+    );
   }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const params = buildParams();
-    setSearchParams(params);
-    onFilterChange({
+    moviesPageStore.setFilters({
       minYear: yearRange[0],
       maxYear: yearRange[1],
       minRating: ratingRange[0],
@@ -102,17 +75,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
   };
 
   const resetFilters = () => {
-    setYearRange([MIN_YEAR, CURRENT_YEAR]);
-    setRatingRange([MIN_RATING, MAX_RATING]);
-    setSelectedGenres([]);
-    setSearchParams({});
-    onFilterChange({
-      minYear: MIN_YEAR,
-      maxYear: CURRENT_YEAR,
-      minRating: MIN_RATING,
-      maxRating: MAX_RATING,
-      genres: [],
-    });
+    moviesPageStore.setFilters(defaultFilters());
   };
 
   return (
@@ -131,7 +94,7 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
             value={yearRange}
             onChange={(_, v) => setYearRange(v as [number, number])}
             valueLabelDisplay="auto"
-            min={1990}
+            min={MIN_YEAR}
             max={CURRENT_YEAR}
           />
         </Box>
@@ -145,8 +108,8 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
             value={ratingRange}
             onChange={(_, v) => setRatingRange(v as [number, number])}
             valueLabelDisplay="auto"
-            min={0}
-            max={10}
+            min={MIN_RATING}
+            max={MAX_RATING}
             step={0.1}
           />
         </Box>
@@ -174,6 +137,6 @@ const FilterForm: React.FC<Props> = ({ onFilterChange }) => {
       </Stack>
     </Paper>
   );
-};
+});
 
 export default FilterForm;

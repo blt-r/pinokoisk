@@ -1,117 +1,168 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { memo, useCallback, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 import MovieCard from '@/components/MovieCard';
-import { fetchMovies, filtersAreSame, type Filters, type Movie } from '@/tmdb';
+import {
+  CURRENT_YEAR,
+  defaultFilters,
+  filtersAreSame,
+  GENRE_IDS,
+  GENRES,
+  MAX_RATING,
+  MIN_RATING,
+  MIN_YEAR,
+  type Filters,
+} from '@/tmdb';
 import FilterForm from '@/components/FilterForm';
 import Spinner from '@/components/Spinner';
+import { moviesPageStore } from '@/stores/moviesPageStore';
+import { reaction } from 'mobx';
+import { useSearchParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
-const MoviesPage: React.FC = () => {
-  const [movieList, setMovieList] = useState<Movie[]>([]);
-  const [page, setPage] = useState(1);
-  const [error, setError] = useState(false);
-  const [noMoreMovies, setNoMoreMovies] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<Filters | null>(null);
+const filtersFromParams = (params: URLSearchParams): Filters => {
+  const f = defaultFilters();
 
-  const loadMoreMovies = async (page: number, filters: Filters) => {
-    setLoading(true);
+  const minYearParam = params.get('year_min');
+  const minYear = minYearParam !== null ? Number(minYearParam) : MIN_YEAR;
+  if (minYear >= MIN_YEAR && minYear <= CURRENT_YEAR) {
+    f.minYear = minYear;
+  }
 
-    try {
-      const newMovies = await fetchMovies(page, filters!);
-      if (newMovies.length > 0) {
-        setMovieList(prevMovies => [...prevMovies, ...newMovies]);
-        setPage(p => p + 1);
-      }
+  const maxYearParam = params.get('year_max');
+  const maxYear = maxYearParam !== null ? Number(maxYearParam) : CURRENT_YEAR;
+  if (maxYear >= MIN_YEAR && maxYear <= CURRENT_YEAR) {
+    f.maxYear = maxYear;
+  }
 
-      if (newMovies.length < 20) {
-        setNoMoreMovies(true);
-      }
-    } catch (error) {
-      console.error('Error loading more movies:', error);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const minRatingParam = params.get('rating_min');
+  const minRating =
+    minRatingParam !== null ? Number(minRatingParam) : MIN_RATING;
+  if (minRating >= MIN_RATING && minRating <= MAX_RATING) {
+    f.minRating = minRating;
+  }
+
+  const maxRatingParam = params.get('rating_max');
+  const maxRating =
+    maxRatingParam !== null ? Number(maxRatingParam) : MAX_RATING;
+  if (maxRating >= MIN_RATING && maxRating <= MAX_RATING) {
+    f.maxRating = maxRating;
+  }
+
+  const genresParam = params.get('genres');
+  if (genresParam) {
+    const genreIds = genresParam
+      .split(',')
+      .map(name => GENRE_IDS[name])
+      .filter(id => id !== undefined);
+    f.genres = genreIds;
+  }
+
+  return f;
+};
+
+const filtersToParams = (filters: Filters): Record<string, string> => {
+  const params: Record<string, string> = {};
+
+  if (filters.minYear > MIN_YEAR) params.year_min = filters.minYear.toString();
+  if (filters.maxYear < CURRENT_YEAR)
+    params.year_max = filters.maxYear.toString();
+
+  if (filters.minRating > MIN_RATING)
+    params.rating_min = filters.minRating.toString();
+  if (filters.maxRating < MAX_RATING)
+    params.rating_max = filters.maxRating.toString();
+
+  if (filters.genres.length)
+    // We assume internal state is always valid
+    params.genres = filters.genres.map(id => GENRES.get(id)).join(',');
+
+  return params;
+};
+
+const MoviesPage: React.FC = observer(() => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const lastPostElementRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (observer.current) observer.current.disconnect();
-      if (!node) return;
+  const lastPostElementRef = (node: HTMLDivElement) => {
+    if (observer.current) observer.current.disconnect();
+    if (!node) return;
 
-      observer.current = new IntersectionObserver(
-        entries => {
-          if (
-            entries[0].isIntersecting &&
-            !loading &&
-            !noMoreMovies &&
-            !error
-          ) {
-            loadMoreMovies(page, filters!);
-          }
-        },
-        { threshold: 1.0 }
-      );
+    observer.current = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && moviesPageStore.canLoadMore) {
+          console.log('End of scroll reached, loading more movies');
+          moviesPageStore.loadMoreMovies();
+        }
+      },
+      { threshold: 1.0 }
+    );
 
-      if (!loading) observer.current.observe(node);
-    },
-    [loading, page, filters, noMoreMovies, error]
-  );
+    if (!moviesPageStore.loading) observer.current.observe(node);
+  };
 
-  const handleFilterChange = useCallback(
-    (newFilters: Filters) => {
-      if (filters != null && filtersAreSame(filters, newFilters)) {
-        return;
+  useEffect(() => {
+    const paramFilters = filtersFromParams(searchParams);
+
+    if (!filtersAreSame(paramFilters, moviesPageStore.filters)) {
+      setSearchParams(filtersToParams(paramFilters), { replace: true });
+      moviesPageStore.setFilters(paramFilters);
+      moviesPageStore.resetMovies();
+
+      moviesPageStore.loadMoreMovies();
+    } else if (
+      moviesPageStore.loadedMovies.length === 0 &&
+      !moviesPageStore.loading
+    ) {
+      moviesPageStore.loadMoreMovies();
+    }
+
+    return reaction(
+      () => moviesPageStore.filters,
+      (filters, oldFilters) => {
+        if (filtersAreSame(filters, oldFilters)) return;
+        setSearchParams(filtersToParams(filters));
+
+        console.log('Filters changed, resetting movies and loading more');
+        moviesPageStore.resetMovies();
+        moviesPageStore.loadMoreMovies();
       }
-
-      setFilters(newFilters);
-      setMovieList([]);
-      setPage(1);
-      setError(false);
-      setNoMoreMovies(false);
-      loadMoreMovies(1, newFilters);
-    },
-    [filters]
-  );
+    );
+    // No need searchParams and setSearchParams in the deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Stack spacing={2} my={2}>
-      <FilterForm onFilterChange={handleFilterChange} />
+      <FilterForm />
 
-      {movieList.map((movie, i) => (
+      {moviesPageStore.loadedMovies.map((movie, i) => (
         <Box
-          ref={i === movieList.length - 1 ? lastPostElementRef : null}
+          ref={
+            i === moviesPageStore.loadedMovies.length - 1
+              ? lastPostElementRef
+              : null
+          }
           key={i}
         >
           <MovieCard movie={movie} />
         </Box>
       ))}
 
-      <InfiniteScrollEnd error={error} noMoreMovies={noMoreMovies} />
+      {moviesPageStore.error ? (
+        <Alert severity="error">
+          Error loading movies. Please try again later.
+        </Alert>
+      ) : moviesPageStore.noMoreMovies ? (
+        <Alert severity="info">No more movies match the filters.</Alert>
+      ) : (
+        <Spinner />
+      )}
     </Stack>
   );
-};
+});
 
 export default MoviesPage;
-
-const InfiniteScrollEnd: React.FC<{
-  error: boolean;
-  noMoreMovies: boolean;
-}> = memo(({ error, noMoreMovies }) => {
-  if (error) {
-    return (
-      <Alert severity="error">
-        Error loading movies. Please try again later.
-      </Alert>
-    );
-  } else if (noMoreMovies) {
-    return <Alert severity="info">No more movies match the filters.</Alert>;
-  } else {
-    return <Spinner />;
-  }
-});
