@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 import type { MovieDetails } from '@/tmdb';
 import FavoriteButton from '@/components/FavoriteButton';
+import Button from '@mui/material/Button';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -48,12 +49,12 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             display: 'block',
           }}
         />
-        <Box>
-          <Typography variant="h1" fontSize="3em">
+        <Stack direction="column" gap={1.5}>
+          <Typography variant="h1" fontSize={{ xs: '2.5rem', sm: '3rem' }}>
             {details.title}
           </Typography>
           {details.title !== details.original_title && (
-            <Typography fontSize="1.4em">{details.original_title}</Typography>
+            <Typography fontSize="1.3rem">{details.original_title}</Typography>
           )}
 
           <Box
@@ -67,7 +68,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             <Typography>{formattedDate}</Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Star sx={{ fontSize: '1em' }} />
+              <Star sx={{ fontSize: '0.9rem' }} />
 
               <Typography sx={{ ml: 0.2 }}>
                 {details.vote_average.toFixed(1)}
@@ -81,7 +82,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             <Typography>{details.runtime} min</Typography>
           </Box>
 
-          <Box my={1}>
+          <Box>
             {details.budget !== 0 && (
               <DetailInfo name="budget">
                 {currencyFormatter.format(details.budget)}
@@ -126,7 +127,27 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             )}
           </Box>
           <Typography>{details.overview}</Typography>
-        </Box>
+          <Stack gap=".5rem" direction="row" flexWrap="wrap">
+            <Button
+              component="a"
+              href={'https://www.themoviedb.org/movie/' + details.id}
+              target="_blank"
+              variant="outlined"
+            >
+              TMDB
+            </Button>
+            {details.imdb_id !== '' && (
+              <Button
+                component="a"
+                href={'https://www.imdb.com/title/' + details.imdb_id}
+                target="_blank"
+                variant="outlined"
+              >
+                IMDb
+              </Button>
+            )}
+          </Stack>
+        </Stack>
       </Stack>
     </Box>
   );
