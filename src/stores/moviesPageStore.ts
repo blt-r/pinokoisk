@@ -38,10 +38,6 @@ class MoviesPageStore {
     this.currentFetchId += 1; // Invalidate ongoing fetches
   }
 
-  get canLoadMore() {
-    return !this.loading && !this.noMoreMovies && !this.error;
-  }
-
   nextFetchId() {
     this.currentFetchId += 1;
     return this.currentFetchId;

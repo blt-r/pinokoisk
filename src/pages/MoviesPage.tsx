@@ -93,7 +93,12 @@ const MoviesPage: React.FC = observer(() => {
 
     observer.current = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting && moviesPageStore.canLoadMore) {
+        if (
+          entries[0].isIntersecting &&
+          !moviesPageStore.loading &&
+          !moviesPageStore.noMoreMovies &&
+          !moviesPageStore.error
+        ) {
           console.log('End of scroll reached, loading more movies');
           moviesPageStore.loadMoreMovies();
         }
