@@ -4,7 +4,7 @@ import { type MovieDetails } from '@/tmdb';
 export const InvalidId = Symbol('InvalidId');
 export type InvalidId = typeof InvalidId;
 
-class CackedMovieDetailsStore {
+class CachedMovieDetailsStore {
   private detailsCache: Map<number, MovieDetails | InvalidId> = new Map();
 
   constructor() {
@@ -24,4 +24,4 @@ class CackedMovieDetailsStore {
   }
 }
 
-export const cachedMovieDetailsStore = new CackedMovieDetailsStore();
+export const cachedMovieDetailsStore = new CachedMovieDetailsStore();
