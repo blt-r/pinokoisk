@@ -39,7 +39,7 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
         />
         <Box
           sx={{
-            fontSize: { xs: '0.7rem', sm: '1rem' },
+            fontSize: { xs: '0.8rem', sm: '1rem' },
             padding: { xs: 1.5, sm: 2 },
             flexGrow: 1,
             display: 'flex',
@@ -57,7 +57,11 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
             {movie.original_title === movie.title ? null : (
               <Typography
                 variant="subtitle1"
-                sx={{ display: 'inline', paddingLeft: 1, fontSize: '1.2em' }}
+                sx={{
+                  display: { xs: 'none', sm: 'inline' },
+                  paddingLeft: 1,
+                  fontSize: '1.2em',
+                }}
               >
                 ({movie.original_title})
               </Typography>
