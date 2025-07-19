@@ -1,4 +1,10 @@
-import { defaultFilters, fetchMovies, type Filters, type Movie } from '@/tmdb';
+import {
+  defaultFilters,
+  fetchMovies,
+  PAGE_SIZE,
+  type Filters,
+  type Movie,
+} from '@/tmdb';
 import { makeAutoObservable } from 'mobx';
 
 class MoviesPageStore {
@@ -57,7 +63,7 @@ class MoviesPageStore {
         this.addPage(newMovies);
       }
 
-      if (newMovies.length < 20) {
+      if (newMovies.length < PAGE_SIZE) {
         this.noMoreMovies = true;
       }
     } catch (error) {

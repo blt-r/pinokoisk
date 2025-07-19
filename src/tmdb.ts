@@ -57,6 +57,8 @@ export const GENRES = new Map<number, string>(
   Object.entries(GENRE_IDS).map(([name, id]) => [id, name])
 );
 
+export const PAGE_SIZE = 20;
+
 const genresFromIds = (ids: number[]): Genre[] => {
   return ids
     .map(id => ({ id, name: GENRES.get(id) }))
