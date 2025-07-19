@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import Star from '@mui/icons-material/Star';
 import LinkMUI from '@mui/material/Link';
 import { Fragment, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 import type { MovieDetails } from '@/tmdb';
-import { Link } from 'react-router-dom';
 import FavoriteButton from '@/components/FavoriteButton';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -103,7 +103,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
               </DetailInfo>
             )}
             {details.spoken_languages.length && (
-              <DetailInfo name="languges">
+              <DetailInfo name="languages">
                 {details.spoken_languages.map(l => l.name).join(', ')}
               </DetailInfo>
             )}
