@@ -19,7 +19,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
   details,
 }) => {
-  const formatedDate = new Date(
+  const formattedDate = new Date(
     Date.parse(details.release_date)
   ).toLocaleDateString('en-US', {
     month: 'long',
@@ -64,7 +64,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
               flexWrap: 'wrap',
             }}
           >
-            <Typography>{formatedDate}</Typography>
+            <Typography>{formattedDate}</Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Star sx={{ fontSize: '1em' }} />
