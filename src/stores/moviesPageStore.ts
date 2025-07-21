@@ -43,6 +43,10 @@ class MoviesPageStore {
     return this.currentFetchId;
   }
 
+  private setNoMoreMovies() {
+    this.noMoreMovies = true;
+  }
+
   async loadMoreMovies() {
     const fetchId = this.nextFetchId();
     this.loading = true;
@@ -60,7 +64,7 @@ class MoviesPageStore {
       }
 
       if (newMovies.length < PAGE_SIZE) {
-        this.noMoreMovies = true;
+        this.setNoMoreMovies();
       }
     } catch (error) {
       console.error('Error loading more movies:', error);
