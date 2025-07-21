@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import type { MovieDetails } from '@/tmdb';
 import FavoriteButton from '@/components/FavoriteButton';
 import Button from '@mui/material/Button';
+import MoviePoster from '@/components/MoviePoster';
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -31,22 +32,26 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
   return (
     <Box my={2}>
       <Stack
-        sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}
+        sx={{
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: 'flex-start',
+          gap: 2,
+        }}
         position="relative"
       >
         <Box sx={{ position: 'absolute', top: 3, right: 3 }}>
           <FavoriteButton id={details.id} />
         </Box>
         <Paper
-          component="img"
-          src={'https://image.tmdb.org/t/p/w500' + details.poster_path}
-          alt={details.title + ' poster'}
+          component={MoviePoster}
+          poster_path={details.poster_path}
+          title={details.title}
+          sizes="(min-width:600px) 250px, 50vw"
           sx={{
             width: { xs: '50%', sm: '250px' },
+            aspectRatio: '2 / 3',
             mx: { xs: 'auto', sm: 0 },
-            height: 'fit-content',
-            aspectRatio: '500 / 720',
-            display: 'block',
+            flexShrink: 0,
           }}
         />
         <Stack direction="column" gap={1.5}>

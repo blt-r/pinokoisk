@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 import { type Movie } from '@/tmdb';
 import FavoriteButton from '@/components/FavoriteButton';
+import MoviePoster from '@/components/MoviePoster';
 
 type Props = {
   movie: Movie;
@@ -32,10 +33,14 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
         }}
       >
         <Box
-          component="img"
-          src={'https://image.tmdb.org/t/p/w500' + movie.poster_path}
-          alt={movie.title + ' poster'}
-          sx={{ height: '100%', aspectRatio: '500 / 720' }}
+          component={MoviePoster}
+          poster_path={movie.poster_path}
+          title={movie.title}
+          sizes="(min-width:600px) 167px, 120px" // 250 * (2/3), 180 * (2/3)
+          sx={{
+            height: '100%',
+            aspectRatio: '2 / 3',
+          }}
         />
         <Box
           sx={{
