@@ -98,17 +98,17 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
                 {currencyFormatter.format(details.revenue)}
               </DetailInfo>
             )}
-            {details.production_companies.length && (
+            {details.production_companies.length !== 0 && (
               <DetailInfo name="production">
                 {details.production_companies.map(c => c.name).join(', ')}
               </DetailInfo>
             )}
-            {details.production_countries.length && (
+            {details.production_countries.length !== 0 && (
               <DetailInfo name="countries">
                 {details.production_countries.map(c => c.name).join(', ')}
               </DetailInfo>
             )}
-            {details.spoken_languages.length && (
+            {details.spoken_languages.length !== 0 && (
               <DetailInfo name="languages">
                 {details.spoken_languages.map(l => l.name).join(', ')}
               </DetailInfo>
@@ -131,7 +131,9 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
               </DetailInfo>
             )}
           </Box>
-          <Typography>{details.overview}</Typography>
+
+          {details.overview && <Typography>{details.overview}</Typography>}
+
           <Stack gap=".5rem" direction="row" flexWrap="wrap">
             <Button
               component="a"
