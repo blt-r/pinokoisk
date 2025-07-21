@@ -4,10 +4,7 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
-import {
-  cachedMovieDetailsStore,
-  InvalidId,
-} from '@/stores/cachedMovieDetailsStore';
+import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
 import { fetchMovieDetails, type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
@@ -24,12 +21,12 @@ const FavoritesPage: React.FC = observer(() => {
           cachedMovieDetailsStore.cache(id, movie);
         } catch (error) {
           console.error(`Failed to fetch movie with ID ${id}:`, error);
-          cachedMovieDetailsStore.cache(id, InvalidId);
+          cachedMovieDetailsStore.cache(id, 'invalid_id');
         }
       };
 
       const promises = Array.from(favoriteStore.set)
-        .filter(id => !cachedMovieDetailsStore.isCached(id))
+        .filter(id => cachedMovieDetailsStore.get(id) === undefined)
         .map(id => awaitAndCache(id));
 
       await Promise.all(promises);
@@ -48,7 +45,7 @@ const FavoritesPage: React.FC = observer(() => {
     if (movie === undefined) {
       break;
     }
-    if (movie === InvalidId) {
+    if (movie === 'invalid_id') {
       error = true;
       continue;
     }

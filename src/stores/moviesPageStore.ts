@@ -11,7 +11,7 @@ class MoviesPageStore {
   private currentFetchId: number = 0;
   filters: Filters = defaultFilters();
   loadedMovies: Movie[] = [];
-  loadedPages: number = 0;
+  private loadedPages: number = 0;
   loading: boolean = false;
   noMoreMovies: boolean = false;
   error: boolean = false;
@@ -24,11 +24,6 @@ class MoviesPageStore {
     this.filters = newFilters;
   }
 
-  addPage(movies: Movie[]) {
-    this.loadedMovies.push(...movies);
-    this.loadedPages += 1;
-  }
-
   resetMovies() {
     this.loadedMovies = [];
     this.loadedPages = 0;
@@ -38,18 +33,28 @@ class MoviesPageStore {
     this.currentFetchId += 1; // Invalidate ongoing fetches
   }
 
-  nextFetchId() {
+  private addPage(movies: Movie[]) {
+    this.loadedMovies.push(...movies);
+    this.loadedPages += 1;
+  }
+
+  private nextFetchId() {
     this.currentFetchId += 1;
     return this.currentFetchId;
   }
-
   private setNoMoreMovies() {
     this.noMoreMovies = true;
+  }
+  private setLoading(value: boolean) {
+    this.loading = value;
+  }
+  private setError() {
+    this.error = true;
   }
 
   async loadMoreMovies() {
     const fetchId = this.nextFetchId();
-    this.loading = true;
+    this.setLoading(true);
 
     try {
       const newMovies = await fetchMovies(this.loadedPages + 1, this.filters);
@@ -68,9 +73,9 @@ class MoviesPageStore {
       }
     } catch (error) {
       console.error('Error loading more movies:', error);
-      this.error = true;
+      this.setError();
     } finally {
-      this.loading = false;
+      this.setLoading(false);
     }
   }
 }

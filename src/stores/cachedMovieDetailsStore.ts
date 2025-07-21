@@ -1,25 +1,18 @@
 import { makeAutoObservable } from 'mobx';
 import { type MovieDetails } from '@/tmdb';
 
-export const InvalidId = Symbol('InvalidId');
-export type InvalidId = typeof InvalidId;
-
 class CachedMovieDetailsStore {
-  private detailsCache: Map<number, MovieDetails | InvalidId> = new Map();
+  private detailsCache: Map<number, MovieDetails | 'invalid_id'> = new Map();
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  cache(id: number, details: MovieDetails | InvalidId) {
+  cache(id: number, details: MovieDetails | 'invalid_id') {
     this.detailsCache.set(id, details);
   }
 
-  isCached(id: number): boolean {
-    return this.detailsCache.has(id);
-  }
-
-  get(id: number): MovieDetails | InvalidId | undefined {
+  get(id: number): MovieDetails | 'invalid_id' | undefined {
     return this.detailsCache.get(id);
   }
 }

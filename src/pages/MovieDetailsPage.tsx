@@ -4,10 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import NotFoundPage from '@/pages/NotFoundPage';
 import { fetchMovieDetails } from '@/tmdb';
-import {
-  cachedMovieDetailsStore,
-  InvalidId,
-} from '@/stores/cachedMovieDetailsStore';
+import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
 import MovieDetailsContent from '@/components/MovieDetailsContent';
 import Spinner from '@/components/Spinner';
 
@@ -29,7 +26,7 @@ const MovieDetailsPage: React.FC = observer(() => {
           `Failed to fetch movie details for ID ${movieId}:`,
           error
         );
-        cachedMovieDetailsStore.cache(movieId, InvalidId);
+        cachedMovieDetailsStore.cache(movieId, 'invalid_id');
       }
     };
 
@@ -38,7 +35,7 @@ const MovieDetailsPage: React.FC = observer(() => {
 
   const movieDetails = cachedMovieDetailsStore.get(movieId);
 
-  if (movieDetails === InvalidId) {
+  if (movieDetails === 'invalid_id') {
     return <NotFoundPage />;
   }
 

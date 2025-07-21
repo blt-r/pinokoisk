@@ -136,7 +136,7 @@ const MoviesPage: React.FC = observer(() => {
         moviesPageStore.loadMoreMovies();
       }
     );
-    // No need searchParams and setSearchParams in the deps
+    // No need for searchParams and setSearchParams in the deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -15,9 +15,9 @@ class FavoriteStore {
     }
 
     reaction(
-      () => [...this.favorites],
+      () => this.favorites,
       favorites => {
-        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(favorites));
+        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify([...favorites]));
       }
     );
   }
