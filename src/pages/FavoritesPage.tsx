@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
 import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
-import { fetchMovieDetails, type Movie } from '@/tmdb';
+import { type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
 import Spinner from '@/components/Spinner';
@@ -15,19 +15,9 @@ const FavoritesPage: React.FC = observer(() => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      const awaitAndCache = async (id: number) => {
-        try {
-          const movie = await fetchMovieDetails(id);
-          cachedMovieDetailsStore.cache(id, movie);
-        } catch (error) {
-          console.error(`Failed to fetch movie with ID ${id}:`, error);
-          cachedMovieDetailsStore.cache(id, 'invalid_id');
-        }
-      };
-
       const promises = Array.from(favoriteStore.set)
         .filter(id => cachedMovieDetailsStore.get(id) === undefined)
-        .map(id => awaitAndCache(id));
+        .map(id => cachedMovieDetailsStore.fetchAndCache(id));
 
       await Promise.all(promises);
 
@@ -42,7 +32,7 @@ const FavoritesPage: React.FC = observer(() => {
 
   for (const id of favoriteStore.set) {
     const movie = cachedMovieDetailsStore.get(id);
-    if (movie === undefined) {
+    if (movie === undefined || movie === 'loading') {
       break;
     }
     if (movie === 'invalid_id') {

@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import NotFoundPage from '@/pages/NotFoundPage';
-import { fetchMovieDetails } from '@/tmdb';
 import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
 import MovieDetailsContent from '@/components/MovieDetailsContent';
 import Spinner from '@/components/Spinner';
@@ -11,27 +10,19 @@ import Spinner from '@/components/Spinner';
 const MovieDetailsPage: React.FC = observer(() => {
   const { id } = useParams<{ id: string }>();
   const movieId = Number(id);
-
-  if (!Number.isFinite(movieId) || !Number.isInteger(movieId)) {
-    return <NotFoundPage />;
-  }
+  const idIsValid =
+    Number.isFinite(movieId) && Number.isInteger(movieId) && movieId > 0;
 
   useEffect(() => {
-    const fetchAndCache = async () => {
-      try {
-        const movieDetails = await fetchMovieDetails(movieId);
-        cachedMovieDetailsStore.cache(movieId, movieDetails);
-      } catch (error) {
-        console.error(
-          `Failed to fetch movie details for ID ${movieId}:`,
-          error
-        );
-        cachedMovieDetailsStore.cache(movieId, 'invalid_id');
-      }
-    };
+    if (!idIsValid) {
+      return;
+    }
+    cachedMovieDetailsStore.fetchAndCache(movieId);
+  }, [idIsValid, movieId]);
 
-    fetchAndCache();
-  }, [movieId]);
+  if (!idIsValid) {
+    return <NotFoundPage />;
+  }
 
   const movieDetails = cachedMovieDetailsStore.get(movieId);
 
@@ -39,7 +30,7 @@ const MovieDetailsPage: React.FC = observer(() => {
     return <NotFoundPage />;
   }
 
-  if (movieDetails === undefined) {
+  if (movieDetails === undefined || movieDetails === 'loading') {
     return <Spinner />;
   }
 
