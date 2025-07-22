@@ -9,12 +9,9 @@ import { Link } from 'react-router-dom';
 import { type Movie } from '@/tmdb';
 import FavoriteButton from '@/components/FavoriteButton';
 import MoviePoster from '@/components/MoviePoster';
+import { memo } from 'react';
 
-type Props = {
-  movie: Movie;
-};
-
-const MovieCard: React.FC<Props> = ({ movie }) => {
+const MovieCard = memo<{ movie: Movie }>(({ movie }) => {
   return (
     <Paper
       sx={{
@@ -129,6 +126,6 @@ const MovieCard: React.FC<Props> = ({ movie }) => {
       </Box>
     </Paper>
   );
-};
+});
 
 export default MovieCard;
