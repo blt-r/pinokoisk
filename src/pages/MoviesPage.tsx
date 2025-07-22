@@ -91,20 +91,12 @@ const MoviesPage: React.FC = observer(() => {
     if (observer.current) observer.current.disconnect();
     if (!node) return;
 
-    observer.current = new IntersectionObserver(
-      entries => {
-        if (
-          entries[0].isIntersecting &&
-          !moviesPageStore.loading &&
-          !moviesPageStore.noMoreMovies &&
-          !moviesPageStore.error
-        ) {
-          console.log('End of scroll reached, loading more movies');
-          moviesPageStore.loadMoreMovies();
-        }
-      },
-      { threshold: 1.0 }
-    );
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        console.log('End of scroll reached, loading more movies');
+        moviesPageStore.loadMoreMovies();
+      }
+    });
 
     if (!moviesPageStore.loading) observer.current.observe(node);
   };
@@ -118,10 +110,7 @@ const MoviesPage: React.FC = observer(() => {
       moviesPageStore.resetMovies();
 
       moviesPageStore.loadMoreMovies();
-    } else if (
-      moviesPageStore.loadedMovies.length === 0 &&
-      !moviesPageStore.loading
-    ) {
+    } else if (moviesPageStore.loadedMovies.length === 0) {
       moviesPageStore.loadMoreMovies();
     }
 
@@ -136,9 +125,7 @@ const MoviesPage: React.FC = observer(() => {
         moviesPageStore.loadMoreMovies();
       }
     );
-    // No need for searchParams and setSearchParams in the deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [searchParams, setSearchParams]);
 
   return (
     <Stack spacing={2} my={2}>
@@ -151,6 +138,8 @@ const MoviesPage: React.FC = observer(() => {
               ? lastPostElementRef
               : null
           }
+          // Movies are not unique by id, and they are only ever appended to the end of the list,
+          // so use index as the key
           key={i}
         >
           <MovieCard movie={movie} />

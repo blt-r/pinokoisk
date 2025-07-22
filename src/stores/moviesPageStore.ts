@@ -53,6 +53,10 @@ class MoviesPageStore {
   }
 
   async loadMoreMovies() {
+    if (this.loading || this.noMoreMovies || this.error) {
+      return;
+    }
+
     const fetchId = this.nextFetchId();
     this.setLoading(true);
 
@@ -74,9 +78,9 @@ class MoviesPageStore {
     } catch (error) {
       console.error('Error loading more movies:', error);
       this.setError();
-    } finally {
-      this.setLoading(false);
     }
+
+    this.setLoading(false);
   }
 }
 
