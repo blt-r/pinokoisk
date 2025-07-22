@@ -15,7 +15,7 @@ const FavoritesPage: React.FC = observer(() => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      const promises = Array.from(favoriteStore.set)
+      const promises = Array.from(favoriteStore.keys())
         .filter(id => cachedMovieDetailsStore.get(id) === undefined)
         .map(id => cachedMovieDetailsStore.fetchAndCache(id));
 
@@ -30,7 +30,7 @@ const FavoritesPage: React.FC = observer(() => {
   const fetchedMovies = [] as Movie[];
   let error = false;
 
-  for (const id of favoriteStore.set) {
+  for (const id of favoriteStore.keys()) {
     const movie = cachedMovieDetailsStore.get(id);
     if (movie === undefined || movie === 'loading') {
       break;
@@ -45,14 +45,16 @@ const FavoritesPage: React.FC = observer(() => {
 
   return (
     <Stack gap={2} my={2}>
-      {favoriteStore.set.size === 0 && (
+      {favoriteStore.size() === 0 && (
         <Typography align="center" py={6}>
           Add movies to favorites and they will appear here
         </Typography>
       )}
 
-      {fetchedMovies.map((movie, i) => (
-        <MovieCard key={i} movie={movie} />
+      {fetchedMovies.map(movie => (
+        // Movies can be removed from the list, and they are unique by id,
+        // so use id as the key
+        <MovieCard key={movie.id} movie={movie} />
       ))}
 
       {error && (

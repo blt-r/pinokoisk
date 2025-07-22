@@ -3,31 +3,38 @@ import { makeAutoObservable, reaction } from 'mobx';
 const LOCALSTORAGE_KEY = 'pinokoisk.favorites';
 
 class FavoriteStore {
-  private favorites: Set<number>;
+  // Use Map instead of Set because mobx tracks Map keys individually
+  private favorites: Map<number, null>;
 
   constructor() {
     makeAutoObservable(this);
+
     const stored = localStorage.getItem(LOCALSTORAGE_KEY);
     if (stored) {
-      this.favorites = new Set(JSON.parse(stored) as number[]);
+      const parsed = JSON.parse(stored) as number[];
+      this.favorites = new Map(parsed.map(id => [id, null]));
     } else {
-      this.favorites = new Set();
+      this.favorites = new Map();
     }
 
     reaction(
-      () => this.favorites,
+      () => [...this.favorites.keys()],
       favorites => {
-        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify([...favorites]));
+        localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(favorites));
       }
     );
   }
 
-  get set(): ReadonlySet<number> {
-    return this.favorites;
+  size() {
+    return this.favorites.size;
+  }
+
+  keys() {
+    return this.favorites.keys();
   }
 
   add(movie_id: number) {
-    this.favorites.add(movie_id);
+    this.favorites.set(movie_id, null);
   }
 
   remove(movie_id: number) {
