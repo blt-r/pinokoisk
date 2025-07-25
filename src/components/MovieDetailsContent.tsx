@@ -143,7 +143,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
             >
               TMDB
             </Button>
-            {details.imdb_id !== '' && (
+            {details.imdb_id && (
               <Button
                 component="a"
                 href={'https://www.imdb.com/title/' + details.imdb_id}

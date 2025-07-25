@@ -137,7 +137,7 @@ export type MovieDetails = Movie & {
   original_language: string;
   revenue: number;
   runtime: number;
-  imdb_id: string;
+  imdb_id: string | null;
   production_companies: {
     id: number;
     name: string;
