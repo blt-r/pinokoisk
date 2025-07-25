@@ -8,6 +8,7 @@ import RootLayout from '@/pages/RootLayout';
 import FavoritesPage from '@/pages/FavoritesPage.tsx';
 import NotFoundPage from '@/pages/NotFoundPage';
 import MovieDetailsPage from '@/pages/MovieDetailsPage';
+import '@/main.css';
 
 const router = createBrowserRouter([
   {
