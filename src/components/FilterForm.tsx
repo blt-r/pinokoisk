@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState, type FormEvent } from 'react';
+import { reaction } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
 import {
   CURRENT_YEAR,
@@ -17,9 +19,7 @@ import {
   MIN_RATING,
   MIN_YEAR,
 } from '@/tmdb';
-import { observer } from 'mobx-react-lite';
 import { moviesPageStore } from '@/stores/moviesPageStore';
-import { reaction } from 'mobx';
 
 const formatYearRange = ([min, max]: [number, number]): string => {
   if (min === MIN_YEAR && max === CURRENT_YEAR) return 'any';
