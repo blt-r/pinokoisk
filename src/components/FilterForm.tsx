@@ -1,25 +1,27 @@
-import Slider from '@mui/material/Slider';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
 import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
+import {
   CURRENT_YEAR,
   defaultFilters,
-  GENRE_IDS,
-  GENRES,
   MAX_RATING,
   MIN_RATING,
   MIN_YEAR,
 } from '@/tmdb';
 import { moviesPageStore } from '@/stores/moviesPageStore';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
+import { Toggle } from '@/components/ui/toggle';
 
 const formatYearRange = ([min, max]: [number, number]): string => {
   if (min === MIN_YEAR && max === CURRENT_YEAR) return 'any';
@@ -48,29 +50,29 @@ const FilterForm: React.FC = observer(() => {
     moviesPageStore.filters.maxRating,
   ]);
 
-  const [selectedGenres, setSelectedGenres] = useState<string[]>(
-    moviesPageStore.filters.genres.map(id => GENRES.get(id)!)
+  const [selectedGenres, setSelectedGenres] = useState<Record<string, boolean>>(
+    () => ({ ...moviesPageStore.filters.genres })
   );
 
   useEffect(() => {
     return reaction(
       () => moviesPageStore.filters,
       filters => {
+        console.log('Filters changed!!!!!!!!', filters);
         setYearRange([filters.minYear, filters.maxYear]);
         setRatingRange([filters.minRating, filters.maxRating]);
-        setSelectedGenres(filters.genres.map(id => GENRES.get(id)!));
+        setSelectedGenres({ ...filters.genres });
       }
     );
   }, []);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     moviesPageStore.setFilters({
       minYear: yearRange[0],
       maxYear: yearRange[1],
       minRating: ratingRange[0],
       maxRating: ratingRange[1],
-      genres: selectedGenres.map(g => GENRE_IDS[g]),
+      genres: { ...selectedGenres },
     });
   };
 
@@ -79,63 +81,60 @@ const FilterForm: React.FC = observer(() => {
   };
 
   return (
-    <Paper sx={{ p: 2 }}>
-      <Typography variant="h2" fontSize={30} mb={2}>
-        Filters
-      </Typography>
+    <Card>
+      <CardHeader>
+        <CardTitle>Filters</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-6">
+        <Label>Year: {formatYearRange(yearRange)}</Label>
+        <Slider
+          aria-labelledby="year-range-slider-label"
+          value={yearRange}
+          onValueChange={v => setYearRange(v as [number, number])}
+          min={MIN_YEAR}
+          max={CURRENT_YEAR}
+        />
 
-      <Stack component="form" onSubmit={handleSubmit} spacing={2} mx={2}>
-        <Box>
-          <Typography id="year-slider-label">
-            Year: {formatYearRange(yearRange)}
-          </Typography>
-          <Slider
-            aria-labelledby="year-slider-label"
-            value={yearRange}
-            onChange={(_, v) => setYearRange(v as [number, number])}
-            valueLabelDisplay="auto"
-            min={MIN_YEAR}
-            max={CURRENT_YEAR}
-          />
-        </Box>
+        <Label>Year: {formatRatingRange(ratingRange)}</Label>
+        <Slider
+          aria-labelledby="rating-range-slider-label"
+          value={ratingRange}
+          onValueChange={v => setRatingRange(v as [number, number])}
+          min={MIN_RATING}
+          max={MAX_RATING}
+          step={0.1}
+        />
 
-        <Box>
-          <Typography id="rating-slider-label">
-            Rating: {formatRatingRange(ratingRange)}
-          </Typography>
-          <Slider
-            aria-labelledby="rating-slider-label"
-            value={ratingRange}
-            onChange={(_, v) => setRatingRange(v as [number, number])}
-            valueLabelDisplay="auto"
-            min={MIN_RATING}
-            max={MAX_RATING}
-            step={0.1}
-          />
-        </Box>
-
-        <Box>
-          <Autocomplete
-            multiple
-            options={Object.keys(GENRE_IDS)}
-            value={selectedGenres}
-            onChange={(_, v) => setSelectedGenres(v)}
-            renderInput={params => (
-              <TextField {...params} label="Genres" variant="standard" />
-            )}
-          />
-        </Box>
-
-        <Stack direction="row" spacing={2} justifyContent="flex-end">
-          <Button variant="outlined" onClick={resetFilters}>
-            Reset
-          </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Apply
-          </Button>
-        </Stack>
-      </Stack>
-    </Paper>
+        <Label>Genres: </Label>
+        <div
+          id="genre-group"
+          role="group"
+          aria-labelledby="genre-label"
+          className="flex flex-wrap gap-2"
+        >
+          {Object.keys(selectedGenres).map(genre => (
+            <Toggle
+              key={genre}
+              pressed={selectedGenres[genre]}
+              size="sm"
+              variant="outline"
+              className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              onPressedChange={pressed =>
+                setSelectedGenres({ ...selectedGenres, [genre]: pressed })
+              }
+            >
+              {genre}
+            </Toggle>
+          ))}
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-end gap-2">
+        <Button variant="secondary" onClick={resetFilters}>
+          Reset
+        </Button>
+        <Button onClick={handleSubmit}>Apply</Button>
+      </CardFooter>
+    </Card>
   );
 });
 

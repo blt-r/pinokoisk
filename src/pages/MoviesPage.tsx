@@ -8,8 +8,6 @@ import {
   CURRENT_YEAR,
   defaultFilters,
   filtersAreSame,
-  GENRE_IDS,
-  GENRES,
   MAX_RATING,
   MIN_RATING,
   MIN_YEAR,
@@ -53,11 +51,11 @@ const filtersFromParams = (params: URLSearchParams): Filters => {
 
   const genresParam = params.get('genres');
   if (genresParam) {
-    const genreIds = genresParam
-      .split(',')
-      .map(name => GENRE_IDS[name])
-      .filter(id => id !== undefined);
-    f.genres = genreIds;
+    for (const genre of genresParam.split(',')) {
+      if (f.genres[genre] !== undefined) {
+        f.genres[genre] = true;
+      }
+    }
   }
 
   return f;
@@ -75,9 +73,12 @@ const filtersToParams = (filters: Filters): Record<string, string> => {
   if (filters.maxRating < MAX_RATING)
     params.rating_max = filters.maxRating.toString();
 
-  if (filters.genres.length)
-    // We assume internal state is always valid
-    params.genres = filters.genres.map(id => GENRES.get(id)).join(',');
+  // We assume internal state is always valid
+  const genres = Object.keys(filters.genres)
+    .filter(g => filters.genres[g])
+    .join(',');
+
+  if (genres) params.genres = genres;
 
   return params;
 };

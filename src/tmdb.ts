@@ -25,7 +25,7 @@ export type Filters = {
   maxYear: number;
   minRating: number;
   maxRating: number;
-  genres: number[];
+  genres: Record<string, boolean>;
 };
 
 export const filtersAreSame = (a: Filters, b: Filters): boolean => {
@@ -34,8 +34,7 @@ export const filtersAreSame = (a: Filters, b: Filters): boolean => {
     a.maxYear === b.maxYear &&
     a.minRating === b.minRating &&
     a.maxRating === b.maxRating &&
-    a.genres.length === b.genres.length &&
-    a.genres.every((genre, index) => genre === b.genres[index])
+    Object.keys(GENRE_IDS).every(g => a.genres[g] === b.genres[g])
   );
 };
 
@@ -77,7 +76,7 @@ export const defaultFilters = (): Filters => ({
   maxYear: CURRENT_YEAR,
   minRating: MIN_RATING,
   maxRating: MAX_RATING,
-  genres: [],
+  genres: Object.fromEntries(Object.keys(GENRE_IDS).map(g => [g, false])),
 });
 
 export const fetchMovies = async (
@@ -104,8 +103,12 @@ export const fetchMovies = async (
     params.append('vote_average.lte', filters.maxRating.toString());
   }
 
-  if (filters.genres.length > 0) {
-    params.append('with_genres', filters.genres.join(','));
+  const genreIds = Object.entries(filters.genres)
+    .filter(([_, selected]) => selected)
+    .map(([name]) => GENRE_IDS[name]);
+
+  if (genreIds.length > 0) {
+    params.append('with_genres', genreIds.join(','));
   }
 
   const url = 'https://api.themoviedb.org/3/discover/movie?' + params;
