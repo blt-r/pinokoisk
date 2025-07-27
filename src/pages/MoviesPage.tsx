@@ -14,11 +14,11 @@ import {
   type Filters,
 } from '@/tmdb';
 import FilterForm from '@/components/FilterForm';
-import Spinner from '@/components/Spinner';
 import { moviesPageStore } from '@/stores/moviesPageStore';
 import { reaction } from 'mobx';
 import { useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import CardSpinner from '@/components/CardSpinner';
 
 const filtersFromParams = (params: URLSearchParams): Filters => {
   const f = defaultFilters();
@@ -154,7 +154,7 @@ const MoviesPage: React.FC = observer(() => {
       ) : moviesPageStore.noMoreMovies ? (
         <Alert severity="info">No more movies match the filters.</Alert>
       ) : (
-        <Spinner />
+        <CardSpinner />
       )}
     </Stack>
   );

@@ -31,7 +31,8 @@ const RootLayout: React.FC = () => {
         </nav>
       </div>
 
-      <main className="max-w-[1200px] mx-auto w-full px-6">
+      {/* #root has display: flex  */}
+      <main className="max-w-[1200px] mx-auto w-full grow-1 px-4">
         <Outlet />
       </main>
     </>

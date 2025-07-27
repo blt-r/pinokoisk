@@ -8,7 +8,7 @@ import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
 import { type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
-import Spinner from '@/components/Spinner';
+import CardSpinner from '@/components/CardSpinner';
 
 const FavoritesPage: React.FC = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ const FavoritesPage: React.FC = observer(() => {
         </Alert>
       )}
 
-      {loading && <Spinner />}
+      {loading && <CardSpinner />}
     </Stack>
   );
 });

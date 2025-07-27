@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import NotFoundPage from '@/pages/NotFoundPage';
 import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
 import MovieDetailsContent from '@/components/MovieDetailsContent';
-import Spinner from '@/components/Spinner';
+import { LoaderCircle } from 'lucide-react';
 
 const MovieDetailsPage: React.FC = observer(() => {
   const { id } = useParams<{ id: string }>();
@@ -31,7 +31,11 @@ const MovieDetailsPage: React.FC = observer(() => {
   }
 
   if (movieDetails === undefined || movieDetails === 'loading') {
-    return <Spinner />;
+    return (
+      <div className="grid place-content-center h-full">
+        <LoaderCircle className="size-14 animate-spin" />
+      </div>
+    );
   }
 
   return <MovieDetailsContent details={movieDetails} />;
