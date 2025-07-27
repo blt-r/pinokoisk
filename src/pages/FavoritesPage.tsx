@@ -1,7 +1,4 @@
-import Stack from '@mui/material/Stack';
 import { observer } from 'mobx-react-lite';
-import Alert from '@mui/material/Alert';
-import Typography from '@mui/material/Typography';
 import { useEffect, useState } from 'react';
 
 import { cachedMovieDetailsStore } from '@/stores/cachedMovieDetailsStore';
@@ -9,6 +6,8 @@ import { type Movie } from '@/tmdb';
 import MovieCard from '@/components/MovieCard';
 import { favoriteStore } from '@/stores/favoriteStore';
 import CardSpinner from '@/components/CardSpinner';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 const FavoritesPage: React.FC = observer(() => {
   const [loading, setLoading] = useState(true);
@@ -44,11 +43,13 @@ const FavoritesPage: React.FC = observer(() => {
   }
 
   return (
-    <Stack gap={2} my={2}>
+    <div className="h-full flex flex-col gap-4 py-4">
       {favoriteStore.size() === 0 && (
-        <Typography align="center" py={6}>
-          Add movies to favorites and they will appear here
-        </Typography>
+        <div className="h-full grid place-items-center">
+          <p className="text-center">
+            Add movies to favorites and they will appear here
+          </p>
+        </div>
       )}
 
       {fetchedMovies.map(movie => (
@@ -58,13 +59,14 @@ const FavoritesPage: React.FC = observer(() => {
       ))}
 
       {error && (
-        <Alert severity="error">
-          Error loading movies. Please try again later.
+        <Alert variant="destructive">
+          <AlertCircle />
+          <AlertTitle>Error loading movies. Please try again later.</AlertTitle>
         </Alert>
       )}
 
       {loading && <CardSpinner />}
-    </Stack>
+    </div>
   );
 });
 

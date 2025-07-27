@@ -1,6 +1,3 @@
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import { useEffect, useRef } from 'react';
 
 import MovieCard from '@/components/MovieCard';
@@ -19,6 +16,8 @@ import { reaction } from 'mobx';
 import { useSearchParams } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import CardSpinner from '@/components/CardSpinner';
+import { Alert, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, InfoIcon } from 'lucide-react';
 
 const filtersFromParams = (params: URLSearchParams): Filters => {
   const f = defaultFilters();
@@ -129,11 +128,11 @@ const MoviesPage: React.FC = observer(() => {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Stack spacing={2} my={2}>
+    <div className="flex flex-col gap-4 py-4">
       <FilterForm />
 
       {moviesPageStore.loadedMovies.map((movie, i) => (
-        <Box
+        <div
           ref={
             i === moviesPageStore.loadedMovies.length - 1
               ? lastPostElementRef
@@ -144,19 +143,23 @@ const MoviesPage: React.FC = observer(() => {
           key={i}
         >
           <MovieCard movie={movie} />
-        </Box>
+        </div>
       ))}
 
       {moviesPageStore.error ? (
-        <Alert severity="error">
-          Error loading movies. Please try again later.
+        <Alert variant="destructive">
+          <AlertCircle />
+          <AlertTitle>Error loading movies. Please try again later.</AlertTitle>
         </Alert>
       ) : moviesPageStore.noMoreMovies ? (
-        <Alert severity="info">No more movies match the filters.</Alert>
+        <Alert>
+          <InfoIcon />
+          <AlertTitle>No more movies match the filters.</AlertTitle>
+        </Alert>
       ) : (
         <CardSpinner />
       )}
-    </Stack>
+    </div>
   );
 });
 
