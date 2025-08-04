@@ -1,130 +1,61 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Star from '@mui/icons-material/Star';
 import { Link } from 'react-router-dom';
 
 import { type Movie } from '@/tmdb';
 import FavoriteButton from '@/components/FavoriteButton';
 import MoviePoster from '@/components/MoviePoster';
 import { memo } from 'react';
+import { StarIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 const MovieCard = memo<{ movie: Movie }>(({ movie }) => {
   return (
-    <Paper
-      sx={{
-        overflow: 'hidden',
-        position: 'relative',
-      }}
-    >
-      <Box
-        component={Link}
-        to={'/movie/' + movie.id}
-        sx={{
-          textDecoration: 'none',
-          height: { xs: 180, sm: 250 },
-          color: 'inherit',
-          display: 'flex',
-        }}
-      >
-        <Box
-          component={MoviePoster}
+    <article className="h-48 sm:h-64 shadow-sm rounded-xl bg-card border text-card-foreground flex overflow-hidden">
+      <Link to={`/movie/${movie.id}`} className="h-full aspect-[2/3]">
+        <MoviePoster
           poster_path={movie.poster_path}
           title={movie.title}
-          sizes="(min-width:600px) 167px, 120px" // 250 * (2/3), 180 * (2/3)
-          sx={{
-            height: '100%',
-            aspectRatio: '2 / 3',
-          }}
+          sizes="(min-width:640px) calc(4px * 64 * 2/3), calc(4px * 48 * 2/3)"
         />
-        <Box
-          sx={{
-            fontSize: { xs: '0.8rem', sm: '1rem' },
-            padding: { xs: 1.5, sm: 2 },
-            flexGrow: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: { xs: 0.5, sm: 1 },
-          }}
+      </Link>
+      <div className="p-3 grow-1 relative overflow-hidden">
+        <Link
+          to={`/movie/${movie.id}`}
+          className="overflow-ellipsis whitespace-nowrap overflow-x-hidden block"
         >
-          <Box>
-            <Typography
-              variant="h2"
-              sx={{ fontSize: '1.7em', display: 'inline' }}
-            >
-              {movie.title}
-            </Typography>
-            {movie.original_title === movie.title ? null : (
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  display: { xs: 'none', sm: 'inline' },
-                  paddingLeft: 1,
-                  fontSize: '1.2em',
-                }}
-              >
-                ({movie.original_title})
-              </Typography>
-            )}
-          </Box>
+          <h2 className="text-xl sm:text-2xl inline">{movie.title}</h2>
+          {movie.original_title !== movie.title && (
+            <p className="text-sm sm:text-lg text-muted-foreground inline">
+              {' ' + movie.original_title}
+            </p>
+          )}
+        </Link>
+        <div className="flex gap-3 flex-wrap items-center text-xs sm:text-base">
+          <p>{movie.release_date.split('-')[0]}</p>
+          <div className="flex items-center gap-1">
+            <StarIcon
+              aria-label="Rating"
+              className="stroke-primary fill-primary size-2.5 sm:size-3"
+            />
+            <p>
+              {`${movie.vote_average.toFixed(1)} (${movie.vote_count.toLocaleString()})`}
+            </p>
+          </div>
+        </div>
+        <p className="line-clamp-2 sm:line-clamp-4">{movie.overview}</p>
 
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 1.2,
-              alignItems: 'center',
-            }}
-          >
-            <Typography sx={{ fontSize: '1.1em' }}>
-              {movie.release_date.split('-')[0]}
-            </Typography>
-
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Star sx={{ fontSize: '1em' }} />
-
-              <Typography sx={{ fontSize: '1.1em', ml: 0.2 }}>
-                {movie.vote_average.toFixed(1)}
-              </Typography>
-
-              <Typography sx={{ fontSize: '1.1em', ml: 1.2 }}>
-                ({movie.vote_count.toLocaleString()})
-              </Typography>
-            </Box>
-          </Box>
-
-          <Typography
-            sx={{
-              display: { xs: 'none', sm: ['block', '-webkit-box'] },
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: 'vertical',
-            }}
-          >
-            {movie.overview}
-          </Typography>
-
-          <Stack
-            sx={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              gap: 0.5,
-              mt: { sm: 'auto' },
-              pr: { sm: 4 },
-            }}
-          >
-            {movie.genres.map((genre, i) => (
-              <Chip key={i} label={genre.name} size="small" />
-            ))}
-          </Stack>
-        </Box>
-      </Box>
-      <Box sx={{ position: 'absolute', bottom: '8px', right: '8px' }}>
-        <FavoriteButton id={movie.id} />
-      </Box>
-    </Paper>
+        {/* TODO: fix genres colliding with the favorite button on phones */}
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {movie.genres.map((genre, i) => (
+            <Badge key={i} variant="secondary" className="">
+              {genre.name}
+            </Badge>
+          ))}
+        </div>
+        <div className="absolute bottom-4 right-4">
+          <FavoriteButton id={movie.id} />
+        </div>
+      </div>
+    </article>
   );
 });
 
