@@ -1,4 +1,10 @@
+import { useEffect } from 'react';
+
 const NotFoundPage: React.FC = () => {
+  useEffect(() => {
+    document.title = 'Pinokoisk | 404';
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 pt-3">
       <h1 className="text-4xl">404 Page not found</h1>

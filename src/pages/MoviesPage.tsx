@@ -83,6 +83,10 @@ const filtersToParams = (filters: Filters): Record<string, string> => {
 };
 
 const MoviesPage: React.FC = observer(() => {
+  useEffect(() => {
+    document.title = 'Pinokoisk';
+  }, []);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const observer = useRef<IntersectionObserver | null>(null);

@@ -13,6 +13,10 @@ const FavoritesPage: React.FC = observer(() => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = 'Pinokoisk | Favorites';
+  }, []);
+
+  useEffect(() => {
     const fetchFavorites = async () => {
       const promises = Array.from(favoriteStore.keys())
         .filter(id => cachedMovieDetailsStore.get(id) === undefined)
