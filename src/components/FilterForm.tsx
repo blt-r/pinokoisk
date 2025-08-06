@@ -44,21 +44,25 @@ const FilterForm: React.FC = observer(() => {
     moviesPageStore.filters.maxRating,
   ]);
 
-  useEffect(() => {
-    setYearRange([
+  useEffect(
+    () => {
+      setYearRange([
+        moviesPageStore.filters.minYear,
+        moviesPageStore.filters.maxYear,
+      ]);
+      setRatingRange([
+        moviesPageStore.filters.minRating,
+        moviesPageStore.filters.maxRating,
+      ]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
       moviesPageStore.filters.minYear,
       moviesPageStore.filters.maxYear,
-    ]);
-    setRatingRange([
       moviesPageStore.filters.minRating,
       moviesPageStore.filters.maxRating,
-    ]);
-  }, [
-    moviesPageStore.filters.minYear,
-    moviesPageStore.filters.maxYear,
-    moviesPageStore.filters.minRating,
-    moviesPageStore.filters.maxRating,
-  ]);
+    ]
+  );
 
   return (
     <Card>
