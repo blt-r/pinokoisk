@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import MovieCard from '@/components/MovieCard';
 import {
+  copyFilters,
   CURRENT_YEAR,
   defaultFilters,
   filtersAreSame,
@@ -119,7 +120,7 @@ const MoviesPage: React.FC = observer(() => {
     }
 
     return reaction(
-      () => moviesPageStore.filters,
+      () => copyFilters(moviesPageStore.filters),
       (filters, oldFilters) => {
         if (filtersAreSame(filters, oldFilters)) return;
         setSearchParams(filtersToParams(filters));

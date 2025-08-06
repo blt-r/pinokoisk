@@ -24,6 +24,20 @@ class MoviesPageStore {
     this.filters = newFilters;
   }
 
+  setYearRange(minYear: number, maxYear: number) {
+    this.filters.minYear = minYear;
+    this.filters.maxYear = maxYear;
+  }
+
+  setRatingRange(minRating: number, maxRating: number) {
+    this.filters.minRating = minRating;
+    this.filters.maxRating = maxRating;
+  }
+
+  setGenre(genre: string, value: boolean) {
+    this.filters.genres[genre] = value;
+  }
+
   resetMovies() {
     this.loadedMovies = [];
     this.loadedPages = 0;

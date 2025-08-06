@@ -38,6 +38,22 @@ export const filtersAreSame = (a: Filters, b: Filters): boolean => {
   );
 };
 
+export const defaultFilters = (): Filters => ({
+  minYear: MIN_YEAR,
+  maxYear: CURRENT_YEAR,
+  minRating: MIN_RATING,
+  maxRating: MAX_RATING,
+  genres: Object.fromEntries(Object.keys(GENRE_IDS).map(g => [g, false])),
+});
+
+export const copyFilters = (filters: Filters): Filters => ({
+  minYear: filters.minYear,
+  maxYear: filters.maxYear,
+  minRating: filters.minRating,
+  maxRating: filters.maxRating,
+  genres: { ...filters.genres },
+});
+
 type Genre = { id: number; name: string };
 
 export type Movie = {
@@ -70,14 +86,6 @@ export const MIN_YEAR = 1990;
 
 export const MIN_RATING = 0;
 export const MAX_RATING = 10;
-
-export const defaultFilters = (): Filters => ({
-  minYear: MIN_YEAR,
-  maxYear: CURRENT_YEAR,
-  minRating: MIN_RATING,
-  maxRating: MAX_RATING,
-  genres: Object.fromEntries(Object.keys(GENRE_IDS).map(g => [g, false])),
-});
 
 export const fetchMovies = async (
   page: number,
