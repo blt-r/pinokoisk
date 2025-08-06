@@ -10,7 +10,11 @@ import { Badge } from '@/components/ui/badge';
 const MovieCard = memo<{ movie: Movie }>(({ movie }) => {
   return (
     <article className="h-48 sm:h-64 shadow-sm rounded-xl bg-card border text-card-foreground flex overflow-hidden">
-      <Link to={`/movie/${movie.id}`} className="h-full aspect-[2/3]">
+      <Link
+        to={`/movie/${movie.id}`}
+        className="h-full aspect-[2/3]"
+        tabIndex={-1}
+      >
         <MoviePoster
           poster_path={movie.poster_path}
           title={movie.title}
