@@ -88,16 +88,14 @@ const FilterForm: React.FC = observer(() => {
       <CardContent className="flex flex-col gap-6">
         <Label>Year: {formatYearRange(yearRange)}</Label>
         <Slider
-          aria-labelledby="year-range-slider-label"
           value={yearRange}
           onValueChange={v => setYearRange(v as [number, number])}
           min={MIN_YEAR}
           max={CURRENT_YEAR}
         />
 
-        <Label>Year: {formatRatingRange(ratingRange)}</Label>
+        <Label>Rating: {formatRatingRange(ratingRange)}</Label>
         <Slider
-          aria-labelledby="rating-range-slider-label"
           value={ratingRange}
           onValueChange={v => setRatingRange(v as [number, number])}
           min={MIN_RATING}
@@ -106,12 +104,7 @@ const FilterForm: React.FC = observer(() => {
         />
 
         <Label>Genres: </Label>
-        <div
-          id="genre-group"
-          role="group"
-          aria-labelledby="genre-label"
-          className="flex flex-wrap gap-2"
-        >
+        <div role="group" className="flex flex-wrap gap-2">
           {Object.keys(selectedGenres).map(genre => (
             <Toggle
               key={genre}
