@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { reaction } from 'mobx';
 import { observer } from 'mobx-react-lite';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import {
-  copyFilters,
   CURRENT_YEAR,
   defaultFilters,
   GENRE_IDS,
@@ -47,14 +45,20 @@ const FilterForm: React.FC = observer(() => {
   ]);
 
   useEffect(() => {
-    return reaction(
-      () => copyFilters(moviesPageStore.filters),
-      filters => {
-        setYearRange([filters.minYear, filters.maxYear]);
-        setRatingRange([filters.minRating, filters.maxRating]);
-      }
-    );
-  }, []);
+    setYearRange([
+      moviesPageStore.filters.minYear,
+      moviesPageStore.filters.maxYear,
+    ]);
+    setRatingRange([
+      moviesPageStore.filters.minRating,
+      moviesPageStore.filters.maxRating,
+    ]);
+  }, [
+    moviesPageStore.filters.minYear,
+    moviesPageStore.filters.maxYear,
+    moviesPageStore.filters.minRating,
+    moviesPageStore.filters.maxRating,
+  ]);
 
   return (
     <Card>
