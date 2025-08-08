@@ -11,7 +11,17 @@ body,
   @apply flex flex-col;
 }
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark {
+  [data-theme='system'] & {
+    @media (prefers-color-scheme: dark) {
+      @slot;
+    }
+  }
+
+  [data-theme='dark'] & {
+    @slot;
+  }
+}
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -51,7 +61,7 @@ body,
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root {
+@utility light-theme {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -86,7 +96,7 @@ body,
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+@utility dark-theme {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -126,5 +136,23 @@ body,
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .remove-transitions-for-theme-change * {
+    transition: none !important;
+  }
+
+  :root {
+    @apply light-theme;
+  }
+
+  [data-theme='dark'] {
+    @apply dark-theme;
+  }
+
+  [data-theme='system'] {
+    @media (prefers-color-scheme: dark) {
+      @apply dark-theme;
+    }
   }
 }
