@@ -136,10 +136,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
                 <Fragment key={i}>
                   {i !== 0 && ', '}
                   {
-                    <Link
-                      className="text-blue-500 hover:underline"
-                      to={'/?genres=' + g.name}
-                    >
+                    <Link className="underline" to={'/?genres=' + g.name}>
                       {g.name}
                     </Link>
                   }
