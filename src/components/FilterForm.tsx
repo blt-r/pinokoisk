@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
 import {
   CURRENT_YEAR,
   defaultFilters,
@@ -65,9 +63,9 @@ const FilterForm: React.FC = observer(() => {
   );
 
   return (
-    <Card>
-      <CardHeader className="flex">
-        <CardTitle>Filters</CardTitle>
+    <section className="bg-card text-card-foreground rounded-lg border shadow-md p-6">
+      <header className="flex items-center mb-6">
+        <h2 className="text-2xl">Filters</h2>
         <Button
           variant="secondary"
           className="ml-auto"
@@ -75,8 +73,8 @@ const FilterForm: React.FC = observer(() => {
         >
           Reset
         </Button>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-6">
+      </header>
+      <div className="flex flex-col gap-6">
         <Label>Year: {formatYearRange(yearRange)}</Label>
         <Slider
           value={yearRange}
@@ -113,8 +111,8 @@ const FilterForm: React.FC = observer(() => {
             </Toggle>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 });
 
