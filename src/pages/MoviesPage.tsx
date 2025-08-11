@@ -92,7 +92,7 @@ const MoviesPage: React.FC = observer(() => {
 
   const observer = useRef<IntersectionObserver | null>(null);
 
-  const lastPostElementRef = (node: HTMLDivElement) => {
+  const lastMovieElementRef = (node: HTMLDivElement) => {
     if (observer.current) observer.current.disconnect();
     if (!node) return;
 
@@ -140,7 +140,7 @@ const MoviesPage: React.FC = observer(() => {
         <div
           ref={
             i === moviesPageStore.loadedMovies.length - 1
-              ? lastPostElementRef
+              ? lastMovieElementRef
               : null
           }
           // Movies are not unique by id, and they are only ever appended to the end of the list,
