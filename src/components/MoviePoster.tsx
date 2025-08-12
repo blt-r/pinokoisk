@@ -25,9 +25,9 @@ const MoviePoster: React.FC<Props> = ({
       className={cn('aspect-[2/3]', className)}
     />
   ) : (
-    <div className={cn('aspect-[2/3] grid place-items-center', className)}>
+    <div className={cn('grid aspect-[2/3] place-items-center', className)}>
       <FileIcon
-        className="size-9 stroke-muted-foreground opacity-50"
+        className="stroke-muted-foreground size-9 opacity-50"
         aria-label="poster missing"
       />
     </div>

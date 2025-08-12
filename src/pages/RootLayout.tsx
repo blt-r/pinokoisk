@@ -9,8 +9,8 @@ const RootLayout: React.FC = () => {
   return (
     <>
       <header className="shadow">
-        <div className="max-w-[1200px] mx-auto w-full px-6 py-4 flex gap-4 flex-wrap">
-          <nav className="flex gap-4 grow">
+        <div className="mx-auto flex w-full max-w-[1200px] flex-wrap gap-4 px-6 py-4">
+          <nav className="flex grow gap-4">
             <Button
               asChild
               size="lg"
@@ -39,7 +39,7 @@ const RootLayout: React.FC = () => {
       </header>
 
       {/* #root has display: flex  */}
-      <main className="max-w-[1200px] mx-auto w-full grow-1 px-4">
+      <main className="mx-auto w-full max-w-[1200px] grow-1 px-4">
         <Outlet />
       </main>
     </>

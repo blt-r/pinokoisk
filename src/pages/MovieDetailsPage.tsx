@@ -34,7 +34,7 @@ const MovieDetailsPage: React.FC = observer(() => {
 
   if (movieDetails === undefined || movieDetails === 'loading') {
     return (
-      <div className="grid place-content-center h-full">
+      <div className="grid h-full place-content-center">
         <LoaderCircle className="size-14 animate-spin" />
       </div>
     );
@@ -67,14 +67,14 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
   });
 
   return (
-    <div className="py-4 flex gap-4 flex-col sm:flex-row">
+    <div className="flex flex-col gap-4 py-4 sm:flex-row">
       <MoviePoster
         poster_path={details.poster_path}
         title={details.title}
         sizes="(min-width:640px) 240px, 50vw"
-        className="rounded-2xl shadow-2xl w-[50%] sm:w-[240px] shrink-0 mx-auto h-fit"
+        className="mx-auto h-fit w-[50%] shrink-0 rounded-2xl shadow-2xl sm:w-[240px]"
       />
-      <div className="grow flex flex-col gap-2">
+      <div className="flex grow flex-col gap-2">
         <div className="flex">
           <h1 className="text-2xl">{details.title}</h1>
           <div className="ml-auto">
@@ -82,12 +82,12 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
           </div>
         </div>
         {details.title !== details.original_title && (
-          <p className="text-xl text-muted-foreground">
+          <p className="text-muted-foreground text-xl">
             {details.original_title}
           </p>
         )}
 
-        <div className="flex gap-3 flex-wrap items-center">
+        <div className="flex flex-wrap items-center gap-3">
           <p>{formattedDate}</p>
           <div className="flex items-center gap-1">
             <StarIcon
@@ -148,7 +148,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
 
         {details.overview && <p>{details.overview}</p>}
 
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           <Button asChild variant="outline">
             <a
               href={'https://www.themoviedb.org/movie/' + details.id}

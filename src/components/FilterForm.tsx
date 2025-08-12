@@ -63,8 +63,8 @@ const FilterForm: React.FC = observer(() => {
   );
 
   return (
-    <section className="bg-card text-card-foreground rounded-lg border shadow-md p-6">
-      <header className="flex items-center mb-6">
+    <section className="bg-card text-card-foreground rounded-lg border p-6 shadow-md">
+      <header className="mb-6 flex items-center">
         <h2 className="text-2xl">Filters</h2>
         <Button
           variant="secondary"

@@ -46,8 +46,8 @@ const FavoriteButton: React.FC<{ id: number }> = observer(({ id }) => {
           size="icon"
         >
           <Heart
-            className={clsx('transition-colors duration-300 size-5', {
-              'stroke-fuchsia-400 fill-fuchsia-400': isFavorite,
+            className={clsx('size-5 transition-colors duration-300', {
+              'fill-fuchsia-400 stroke-fuchsia-400': isFavorite,
             })}
           />
         </Button>

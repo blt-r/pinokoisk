@@ -42,7 +42,7 @@ const ThemeToggle = observer(() => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon" aria-label="Toggle theme">
           <SunIcon className="size-[1.2rem] dark:opacity-0" />
-          <MoonIcon className="size-[1.2rem] opacity-0 dark:opacity-100 absolute" />
+          <MoonIcon className="absolute size-[1.2rem] opacity-0 dark:opacity-100" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
