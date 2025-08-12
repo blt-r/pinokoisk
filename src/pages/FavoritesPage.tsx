@@ -47,7 +47,7 @@ const FavoritesPage: React.FC = observer(() => {
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 py-4">
+    <div className="flex h-full flex-col gap-4">
       {favoriteStore.size() === 0 && (
         <div className="grid h-full place-items-center">
           <p className="text-center">

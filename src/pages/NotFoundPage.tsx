@@ -6,7 +6,7 @@ const NotFoundPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 pt-3">
+    <div className="flex flex-col gap-2">
       <h1 className="text-4xl">404 Page not found</h1>
       <p className="text-2xl">
         I don't know what you are looking for, but it is not here.

@@ -67,7 +67,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
   });
 
   return (
-    <div className="flex flex-col gap-4 py-4 sm:flex-row">
+    <div className="flex flex-col gap-4 sm:flex-row">
       <MoviePoster
         poster_path={details.poster_path}
         title={details.title}

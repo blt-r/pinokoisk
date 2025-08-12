@@ -133,7 +133,7 @@ const MoviesPage: React.FC = observer(() => {
   }, [searchParams, setSearchParams]);
 
   return (
-    <div className="flex flex-col gap-4 py-4">
+    <div className="flex flex-col gap-4">
       <FilterForm />
 
       {moviesPageStore.loadedMovies.map((movie, i) => (
