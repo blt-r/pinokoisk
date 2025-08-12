@@ -1,16 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-html,
-body,
-#root {
-  @apply h-full;
-}
-
-#root {
-  @apply flex flex-col;
-}
-
 @custom-variant dark {
   [data-theme='system'] & {
     @media (prefers-color-scheme: dark) {
@@ -136,6 +126,16 @@ body,
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+
+  #root {
+    @apply flex flex-col;
   }
 
   .remove-transitions-for-theme-change * {
