@@ -38,7 +38,7 @@ const MovieCard = memo<{ movie: Movie }>(({ movie }) => {
           <div className="flex items-center gap-1">
             <StarIcon
               aria-label="Rating"
-              className="stroke-primary fill-primary size-2.5 sm:size-3"
+              className="size-2.5 fill-current sm:size-3"
             />
             <p>
               {`${movie.vote_average.toFixed(1)} (${movie.vote_count.toLocaleString()})`}

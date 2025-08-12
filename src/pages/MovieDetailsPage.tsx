@@ -90,10 +90,7 @@ const MovieDetailsContent: React.FC<{ details: MovieDetails }> = ({
         <div className="flex flex-wrap items-center gap-3">
           <p>{formattedDate}</p>
           <div className="flex items-center gap-1">
-            <StarIcon
-              aria-label="Rating"
-              className="stroke-primary fill-primary size-3"
-            />
+            <StarIcon aria-label="Rating" className="size-3 fill-current" />
             <p>
               {`${details.vote_average.toFixed(1)} (${details.vote_count.toLocaleString()})`}
             </p>
