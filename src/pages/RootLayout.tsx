@@ -8,7 +8,7 @@ const RootLayout: React.FC = () => {
 
   return (
     <>
-      <header className="shadow">
+      <header className="border-b shadow">
         <div className="mx-auto flex w-full max-w-[1200px] flex-wrap gap-4 p-4">
           <nav className="flex grow gap-4">
             <Button
