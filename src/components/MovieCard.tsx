@@ -22,10 +22,7 @@ const MovieCard = memo<{ movie: Movie }>(({ movie }) => {
         />
       </Link>
       <div className="relative grow-1 overflow-hidden p-3">
-        <Link
-          to={`/movie/${movie.id}`}
-          className="block overflow-x-hidden overflow-ellipsis whitespace-nowrap"
-        >
+        <Link to={`/movie/${movie.id}`} className="block truncate">
           <h2 className="inline text-xl sm:text-2xl">{movie.title}</h2>
           {movie.original_title !== movie.title && (
             <p className="text-muted-foreground inline text-sm sm:text-lg">
